@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (Search & Controls)
+-- PROGRAM: BACOFY PRO (Syntax & EOF Fix)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -13,7 +13,6 @@ local isPlaying = false
 local searchQuery = ""
 local w, h = term.getSize()
 
--- Lädt die Liste von GitHub
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
@@ -26,7 +25,6 @@ local function getList(url)
     return list
 end
 
--- Such-Filter Funktion
 local function filterSongs()
     filteredSongs = {}
     if searchQuery == "" then
@@ -41,12 +39,10 @@ local function filterSongs()
     end
 end
 
--- UI
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- Suchleiste
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.blue)
     term.clearLine()
@@ -55,7 +51,6 @@ local function drawUI()
     term.setTextColor(colors.white)
     term.write(searchQuery .. "_")
 
-    -- Song Liste
     term.setBackgroundColor(colors.black)
     if #filteredSongs == 0 then
         term.setCursorPos(2, 3)
@@ -65,9 +60,7 @@ local function drawUI()
         for i, item in ipairs(filteredSongs) do
             if i > h - 3 then break end
             term.setCursorPos(2, 2 + i)
-            
             local isCurrent = (allSongs[currentIdx] and item.url == allSongs[currentIdx].url and isPlaying)
-            
             if isCurrent then
                 term.setTextColor(colors.lime)
                 term.write("> " .. item.name)
@@ -78,17 +71,14 @@ local function drawUI()
         end
     end
 
-    -- Footer
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
     term.setTextColor(colors.white)
-    
     local playIcon = isPlaying and "[||]" or "[ >]"
     term.write(" [|<] " .. playIcon .. " [>|] | VOL: " .. math.floor(vol*100) .. "% | [R] REF")
 end
 
--- AUDIO ENGINE
 local function playSong(url)
     if not speaker then return end
     local res = http.get({ url = url, binary = true })
@@ -125,7 +115,6 @@ local function playSong(url)
     end
     res.close()
     
-    -- Auto-Play Nächstes Lied
     if isPlaying then 
         currentIdx = currentIdx + 1
         if currentIdx > #allSongs then currentIdx = 1 end
@@ -133,12 +122,10 @@ local function playSong(url)
     end
 end
 
--- INITIAL LOAD
 allSongs = getList(indexURL)
 filterSongs()
 drawUI()
 
--- EVENT LOOP
 parallel.waitForAny(
     function()
         while true do
@@ -148,14 +135,12 @@ parallel.waitForAny(
                 searchQuery = searchQuery .. p1
                 filterSongs()
                 drawUI()
-            
             elseif event == "key" then
                 if p1 == keys.backspace and #searchQuery > 0 then
                     searchQuery = string.sub(searchQuery, 1, -2)
                     filterSongs()
                     drawUI()
                 end
-                
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
@@ -171,31 +156,28 @@ parallel.waitForAny(
                         isPlaying = false
                         os.queueEvent("start_music")
                     end
-                
                 elseif y == h then
-                    if x >= 2 and x <= 5 then           -- ZURÜCK
+                    if x >= 2 and x <= 5 then
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 7 and x <= 10 then      -- PLAY/PAUSE
+                    elseif x >= 7 and x <= 10 then
                         isPlaying = not isPlaying
                         if isPlaying then os.queueEvent("start_music") end
-                    elseif x >= 12 and x <= 15 then     -- VOR
+                    elseif x >= 12 and x <= 15 then
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 18 and x <= 26 then     -- LAUTSTÄRKE (Gefixt!)
+                    elseif x >= 18 and x <= 26 then
                         vol = vol + 0.1
-                        if vol > 1.0 then 
-                            vol = 0.1 
-                        end
-                    elseif x >= 29 then                 -- REFRESH
+                        if vol > 1.0 then vol = 0.1 end
+                    elseif x >= 29 then
                         allSongs = getList(indexURL)
                         filterSongs()
                     end
