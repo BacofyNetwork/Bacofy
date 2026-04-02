@@ -16,7 +16,7 @@ ctk.set_default_color_theme("blue")
 class BacofyApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("BACOFY RAW (Manuelle Namen)")
+        self.title("BACOFY RAW (Anti-Bass-Kratzen)")
         self.geometry("550x550")
 
         ctk.CTkLabel(self, text="BACOFY CONVERTER", font=("Roboto", 24, "bold")).pack(pady=20)
@@ -24,7 +24,6 @@ class BacofyApp(ctk.CTk):
         self.url_entry = ctk.CTkEntry(self, placeholder_text="YouTube URL...", width=450)
         self.url_entry.pack(pady=10)
         
-        # Das Namens-Feld ist zurück!
         self.name_entry = ctk.CTkEntry(self, placeholder_text="Song Name (Anzeige in Minecraft)", width=450)
         self.name_entry.pack(pady=10)
 
@@ -56,7 +55,6 @@ class BacofyApp(ctk.CTk):
             self.log("Synchronisiere GitHub...")
             subprocess.run(["git", "pull", "origin", "main"], check=True)
 
-            # Macht den Dateinamen sicher, aber behält deinen Anzeigenamen für Ingame
             safe_name = re.sub(r'[^a-zA-Z0-9]', '', d_name)
             output_file = os.path.join(music_dir, f"{safe_name}.raw")
             
@@ -73,18 +71,30 @@ class BacofyApp(ctk.CTk):
             with yt_dlp.YoutubeDL(ydl_opts) as ydl: 
                 ydl.download([url])
             
-            self.log("Konvertiere zu RAW...")
+            # --- DER MAGISCHE FILTER ---
+            # volume=-5dB gibt dem Bass den nötigen Headroom!
+            self.log("Konvertiere zu RAW (Anti-Kratz-Filter aktiv)...")
             subprocess.run([
                 FFMPEG_PATH, '-y', '-i', 'temp.wav',
-                '-af', 'aresample=48000:resample_cutoff=0.99:dither_method=triangular,volume=-1dB',
+                '-af', 'volume=-5dB,aresample=48000:resample_cutoff=0.99:dither_method=triangular',
                 '-ac', '1', '-ar', '48000', '-f', 's8', '-acodec', 'pcm_s8',
                 output_file
             ], check=True)
 
             self.log("Update songlist.txt...")
             playlist_path = os.path.join(music_dir, "songlist.txt")
-            with open(playlist_path, "a", encoding="utf-8") as f: 
-                f.write(f"{BASE_URL}{safe_name}.raw, {d_name}\n")
+            
+            # Wir prüfen, ob das Lied schon in der Liste steht, um doppelte Einträge zu vermeiden
+            song_entry = f"{BASE_URL}{safe_name}.raw, {d_name}\n"
+            song_exists = False
+            if os.path.exists(playlist_path):
+                with open(playlist_path, "r", encoding="utf-8") as f:
+                    if song_entry in f.readlines():
+                        song_exists = True
+            
+            if not song_exists:
+                with open(playlist_path, "a", encoding="utf-8") as f: 
+                    f.write(song_entry)
 
             self.log("Pushe zu GitHub...")
             subprocess.run(["git", "add", "."], check=True)
@@ -94,7 +104,6 @@ class BacofyApp(ctk.CTk):
             if os.path.exists('temp.wav'): os.remove('temp.wav')
             self.log(f"ERFOLGREICH! '{d_name}' ist online. 🥓")
             
-            # Felder nach Erfolg leeren
             self.url_entry.delete(0, 'end')
             self.name_entry.delete(0, 'end')
             
