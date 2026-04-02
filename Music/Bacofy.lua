@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY (ORIGINAL UI + RAW FIX)
+-- PROGRAM: BACOFY (ORIGINAL UI + SERVER FIX)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -11,7 +11,6 @@ local currentIdx = 1
 local isPlaying = false
 local w, h = term.getSize()
 
--- Lädt die Liste
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
@@ -24,7 +23,6 @@ local function getList(url)
     return list
 end
 
--- DEIN ORIGINAL DESIGN
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
@@ -52,7 +50,7 @@ local function drawUI()
         end
     end
 
-    -- Footer (Dein alter Look)
+    -- Footer
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
@@ -60,7 +58,7 @@ local function drawUI()
     term.write(" VOL: " .. math.floor(vol*100) .. "% | [P] PLAY/STOP | [R] REFRESH")
 end
 
--- AUDIO ENGINE (Gefixt)
+-- AUDIO ENGINE (Kugelsicher für alle Server!)
 local function playSong(url)
     if not speaker then return end
     local res = http.get({ url = url, binary = true })
@@ -68,17 +66,34 @@ local function playSong(url)
     
     isPlaying = true
     while isPlaying do
-        -- FIX: Zurück auf 4096, da große Chunks den Speaker stumm schalten!
         local chunk = res.read(4096) 
-        if not chunk or chunk == "" then break end
+        if chunk == nil or chunk == "" then break end
         
         local buffer = {}
-        for i = 1, #chunk do
-            local val = string.byte(chunk, i)
+        
+        -- FIX: Wir prüfen, was der Server uns gibt (Text oder Zahlen)
+        if type(chunk) == "string" then
+            for i = 1, #chunk do
+                local val = string.byte(chunk, i)
+                if val > 127 then val = val - 256 end
+                table.insert(buffer, val)
+            end
+        elseif type(chunk) == "number" then
+            -- Fallback für Server, die Zahlen einzeln schicken
+            local val = chunk
             if val > 127 then val = val - 256 end
             table.insert(buffer, val)
+            
+            -- Wir lesen den Rest des Blocks einzeln nach
+            for i = 2, 4096 do
+                local b = res.read()
+                if not b then break end
+                if b > 127 then b = b - 256 end
+                table.insert(buffer, b)
+            end
         end
         
+        -- Abspielen
         while isPlaying and not speaker.playAudio(buffer, vol) do
             os.pullEvent("speaker_audio_empty")
         end
@@ -96,7 +111,6 @@ currentSongs = getList(indexURL)
 drawUI()
 
 parallel.waitForAny(
-    -- Maus-Steuerung
     function()
         while true do
             local _, _, x, y = os.pullEvent("mouse_click")
@@ -108,7 +122,6 @@ parallel.waitForAny(
                     os.queueEvent("start_music")
                 end
             elseif y == h then
-                -- Footer Klicks (Vol, Play, Refresh)
                 if x <= 10 then
                     vol = (vol + 0.1 > 1) and 0.1 or vol + 0.1
                 elseif x > 12 and x < 26 then
@@ -121,7 +134,6 @@ parallel.waitForAny(
             drawUI()
         end
     end,
-    -- Tastatur-Steuerung
     function()
         while true do
             local _, key = os.pullEvent("key")
@@ -134,14 +146,12 @@ parallel.waitForAny(
             drawUI()
         end
     end,
-    -- Audio-Loop
     function()
         while true do
             os.pullEvent("start_music")
             if currentSongs[currentIdx] then playSong(currentSongs[currentIdx].url) end
         end
     end,
-    -- Auto-Refresh (Alle 30 Sekunden)
     function()
         while true do
             os.sleep(30)
