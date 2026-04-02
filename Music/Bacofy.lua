@@ -1,5 +1,6 @@
 -- ==========================================
--- PROGRAM: BACOFY RAW (Single List Edition)
+-- PROGRAM: BACOFY ULTIMATE (Single List)
+-- DESCRIPTION: RAW HQ Player + Auto-Refresh
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -11,24 +12,32 @@ local currentIdx = 1
 local isPlaying = false
 local w, h = term.getSize()
 
--- Lädt direkt die Lieder aus der songlist.txt
+-- FETCH SONG LIST
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
     local list = {}
-    for line in res.readAll():gmatch("[^\r\n]+") do
-        local l, n = line:match("^(.*),(.*)$")
-        if l then table.insert(list, {url=l:gsub("%s+",""), name=n:match("^%s*(.-)%s*$")}) end
-    end
+    local content = res.readAll()
     res.close()
+    
+    for line in content:gmatch("[^\r\n]+") do
+        local l, n = line:match("^(.*),(.*)$")
+        if l then 
+            table.insert(list, {
+                url = l:gsub("%s+", ""), 
+                name = n:match("^%s*(.-)%s*$")
+            }) 
+        end
+    end
     return list
 end
 
+-- DRAW INTERFACE
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- Header (Blau)
+    -- Header
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.blue)
     term.clearLine()
@@ -37,22 +46,28 @@ local function drawUI()
     term.setTextColor(colors.white)
     term.write(header)
 
-    -- Liste
+    -- Song List
     term.setBackgroundColor(colors.black)
-    for i, item in ipairs(currentSongs) do
-        if i > h - 3 then break end
-        term.setCursorPos(2, 2 + i)
-        
-        if i == currentIdx and isPlaying then
-            term.setTextColor(colors.lime)
-            term.write("> " .. item.name)
-        else
-            term.setTextColor(colors.white)
-            term.write(i .. ". " .. item.name)
+    if #currentSongs == 0 then
+        term.setCursorPos(2, 3)
+        term.setTextColor(colors.red)
+        term.write("No songs found!")
+    else
+        for i, item in ipairs(currentSongs) do
+            if i > h - 3 then break end
+            term.setCursorPos(2, 2 + i)
+            
+            if i == currentIdx and isPlaying then
+                term.setTextColor(colors.lime)
+                term.write("> " .. item.name)
+            else
+                term.setTextColor(colors.white)
+                term.write(i .. ". " .. item.name)
+            end
         end
     end
 
-    -- Footer (Grau)
+    -- Footer
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
@@ -61,6 +76,7 @@ local function drawUI()
     term.write(" " .. status .. " | VOL: " .. math.floor(vol*100) .. "% | [R] REFRESH")
 end
 
+-- AUDIO ENGINE (RAW)
 local function playSong(url)
     if not speaker then return end
     local res = http.get({ url = url, binary = true })
@@ -85,23 +101,22 @@ local function playSong(url)
     end
     res.close()
     
-    -- Springt automatisch zum nächsten Lied
     if isPlaying then 
         currentIdx = (currentIdx % #currentSongs) + 1
         os.queueEvent("start_music")
     end
 end
 
--- Startvorgang
+-- INITIAL LOAD
 currentSongs = getList(indexURL)
 drawUI()
 
+-- EVENT LOOP
 parallel.waitForAny(
     function()
         while true do
             local _, _, x, y = os.pullEvent("mouse_click")
             if y >= 3 and y < h then
-                -- Klick auf ein Lied
                 local idx = y - 2
                 if currentSongs[idx] then
                     currentIdx = idx
@@ -109,7 +124,6 @@ parallel.waitForAny(
                     os.queueEvent("start_music")
                 end
             elseif y == h then
-                -- Klick auf die Footer-Leiste
                 if x <= 8 then
                     isPlaying = not isPlaying
                     if isPlaying then os.queueEvent("start_music") end
@@ -117,6 +131,7 @@ parallel.waitForAny(
                     vol = (vol >= 1) and 0.1 or vol + 0.1
                 elseif x > 20 then
                     currentSongs = getList(indexURL)
+                    drawUI()
                 end
             end
             drawUI()
@@ -135,6 +150,22 @@ parallel.waitForAny(
         while true do
             os.pullEvent("start_music")
             if currentSongs[currentIdx] then playSong(currentSongs[currentIdx].url) end
+        end
+    end,
+    -- ==========================================
+    -- NEU: BACKGROUND AUTO-REFRESH
+    -- ==========================================
+    function()
+        while true do
+            -- Checkt alle 30 Sekunden im Hintergrund
+            os.sleep(30) 
+            local newList = getList(indexURL)
+            
+            -- Updatet die UI nur, wenn wirklich neue Lieder da sind
+            if newList and #newList > #currentSongs then
+                currentSongs = newList
+                drawUI()
+            end
         end
     end
 )
