@@ -41,19 +41,19 @@ local function filterSongs()
     end
 end
 
--- NEUES DESIGN: Mit Suchleiste und Media Controls
+-- UI
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- Top Bar (Suchleiste)
+    -- Suchleiste
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.blue)
     term.clearLine()
     term.setTextColor(colors.yellow)
     term.write(" Suche: ")
     term.setTextColor(colors.white)
-    term.write(searchQuery .. "_") -- Zeigt an, was du tippst
+    term.write(searchQuery .. "_")
 
     -- Song Liste
     term.setBackgroundColor(colors.black)
@@ -66,7 +66,6 @@ local function drawUI()
             if i > h - 3 then break end
             term.setCursorPos(2, 2 + i)
             
-            -- Prüft, ob das Lied gerade spielt
             local isCurrent = (allSongs[currentIdx] and item.url == allSongs[currentIdx].url and isPlaying)
             
             if isCurrent then
@@ -79,14 +78,13 @@ local function drawUI()
         end
     end
 
-    -- Footer (Media Controls)
+    -- Footer
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
     term.setTextColor(colors.white)
     
     local playIcon = isPlaying and "[||]" or "[ >]"
-    -- Klickbare Zonen: [|<] (Zurück), [||] (Play/Pause), [>|] (Vor)
     term.write(" [|<] " .. playIcon .. " [>|] | VOL: " .. math.floor(vol*100) .. "% | [R] REF")
 end
 
@@ -135,24 +133,22 @@ local function playSong(url)
     end
 end
 
--- INITIALISIERUNG
+-- INITIAL LOAD
 allSongs = getList(indexURL)
 filterSongs()
 drawUI()
 
--- EVENT LOOPS (Zusammengefasst für reibungslose Eingabe)
+-- EVENT LOOP
 parallel.waitForAny(
     function()
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- WENN MAN TIPPt (Suche)
             if event == "char" then
                 searchQuery = searchQuery .. p1
                 filterSongs()
                 drawUI()
             
-            -- LÖSCHEN TASTE (Backspace)
             elseif event == "key" then
                 if p1 == keys.backspace and #searchQuery > 0 then
                     searchQuery = string.sub(searchQuery, 1, -2)
@@ -160,15 +156,12 @@ parallel.waitForAny(
                     drawUI()
                 end
                 
-            -- MAUS KLICKS
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
-                -- Klick in die Liste
                 if y >= 3 and y < h then
                     local idx = y - 2
                     if filteredSongs[idx] then
-                        -- Sucht das geklickte Lied in der Hauptliste
                         for i, s in ipairs(allSongs) do
                             if s.url == filteredSongs[idx].url then
                                 currentIdx = i
@@ -179,27 +172,29 @@ parallel.waitForAny(
                         os.queueEvent("start_music")
                     end
                 
-                -- Klick in den Footer (Steuerelemente)
                 elseif y == h then
-                    if x >= 2 and x <= 5 then           -- ZURÜCK [|<]
+                    if x >= 2 and x <= 5 then           -- ZURÜCK
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 7 and x <= 10 then      -- PLAY/PAUSE [||]
+                    elseif x >= 7 and x <= 10 then      -- PLAY/PAUSE
                         isPlaying = not isPlaying
                         if isPlaying then os.queueEvent("start_music") end
-                    elseif x >= 12 and x <= 15 then     -- VOR [>|]
+                    elseif x >= 12 and x <= 15 then     -- VOR
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 18 and x <= 26 then     -- LAUTSTÄRKE
-                        vol = (vol + 0.1 > 1) and 0.1 or vol + 0.1
+                    elseif x >= 18 and x <= 26 then     -- LAUTSTÄRKE (Gefixt!)
+                        vol = vol + 0.1
+                        if vol > 1.0 then 
+                            vol = 0.1 
+                        end
                     elseif x >= 29 then                 -- REFRESH
                         allSongs = getList(indexURL)
                         filterSongs()
@@ -209,14 +204,12 @@ parallel.waitForAny(
             end
         end
     end,
-    -- Audio-Abspieler
     function()
         while true do
             os.pullEvent("start_music")
             if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
         end
     end,
-    -- Auto-Refresh (Alle 30 Sekunden)
     function()
         while true do
             os.sleep(30)
