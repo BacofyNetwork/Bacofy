@@ -1,1 +1,6 @@
+<<<<<<< HEAD
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HolyPriestHolyAtlantis.raw, Holy Priest - Holy Atlantis
+=======
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Ostdeutschland.raw, Ostdeutschland
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HolyPriestHolyAtlantis.raw, Holy Priest - Holy Atlantis
+>>>>>>> d2bcb191662450f53e7f464ab8b366e6a96d6b58
