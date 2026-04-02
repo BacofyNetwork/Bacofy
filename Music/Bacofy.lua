@@ -1,16 +1,19 @@
 -- ==========================================
--- PROGRAM: BACOFY (ORIGINAL UI + RAW WORKING)
+-- PROGRAM: BACOFY PRO (Search & Controls)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
 local indexURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/songlist.txt"
 
-local currentSongs = {}
+local allSongs = {}
+local filteredSongs = {}
 local vol = 0.5
 local currentIdx = 1
 local isPlaying = false
+local searchQuery = ""
 local w, h = term.getSize()
 
+-- Lädt die Liste von GitHub
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
@@ -23,70 +26,98 @@ local function getList(url)
     return list
 end
 
+-- Such-Filter Funktion
+local function filterSongs()
+    filteredSongs = {}
+    if searchQuery == "" then
+        for i, s in ipairs(allSongs) do table.insert(filteredSongs, s) end
+    else
+        local q = string.lower(searchQuery)
+        for i, s in ipairs(allSongs) do
+            if string.find(string.lower(s.name), q) then
+                table.insert(filteredSongs, s)
+            end
+        end
+    end
+end
+
+-- NEUES DESIGN: Mit Suchleiste und Media Controls
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
+    -- Top Bar (Suchleiste)
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.blue)
     term.clearLine()
-    local header = "BACOFY MUSIC"
-    term.setCursorPos(math.floor((w - #header) / 2) + 1, 1)
+    term.setTextColor(colors.yellow)
+    term.write(" Suche: ")
     term.setTextColor(colors.white)
-    term.write(header)
+    term.write(searchQuery .. "_") -- Zeigt an, was du tippst
 
+    -- Song Liste
     term.setBackgroundColor(colors.black)
-    for i, item in ipairs(currentSongs) do
-        if i > h - 3 then break end
-        term.setCursorPos(2, 2 + i)
-        if i == currentIdx and isPlaying then
-            term.setTextColor(colors.lime)
-            term.write("> " .. item.name)
-        else
-            term.setTextColor(colors.white)
-            term.write(i .. ". " .. item.name)
+    if #filteredSongs == 0 then
+        term.setCursorPos(2, 3)
+        term.setTextColor(colors.red)
+        term.write("Keine Songs gefunden.")
+    else
+        for i, item in ipairs(filteredSongs) do
+            if i > h - 3 then break end
+            term.setCursorPos(2, 2 + i)
+            
+            -- Prüft, ob das Lied gerade spielt
+            local isCurrent = (allSongs[currentIdx] and item.url == allSongs[currentIdx].url and isPlaying)
+            
+            if isCurrent then
+                term.setTextColor(colors.lime)
+                term.write("> " .. item.name)
+            else
+                term.setTextColor(colors.white)
+                term.write(i .. ". " .. item.name)
+            end
         end
     end
 
+    -- Footer (Media Controls)
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
     term.setTextColor(colors.white)
-    term.write(" VOL: " .. math.floor(vol*100) .. "% | [P] PLAY | [R] REFRESH")
+    
+    local playIcon = isPlaying and "[||]" or "[ >]"
+    -- Klickbare Zonen: [|<] (Zurück), [||] (Play/Pause), [>|] (Vor)
+    term.write(" [|<] " .. playIcon .. " [>|] | VOL: " .. math.floor(vol*100) .. "% | [R] REF")
 end
 
+-- AUDIO ENGINE
 local function playSong(url)
-    if not speaker then 
-        term.setCursorPos(1, h-1)
-        term.setTextColor(colors.red)
-        term.write("FEHLER: Kein Speaker gefunden!")
-        return 
-    end
-    
+    if not speaker then return end
     local res = http.get({ url = url, binary = true })
-    if not res then 
-        -- HIER IST DER DEBUGGER: Wenn der Link kaputt ist, sagt er es dir jetzt!
-        term.setCursorPos(1, h-2)
-        term.setBackgroundColor(colors.black)
-        term.setTextColor(colors.red)
-        term.clearLine()
-        term.write("404 FEHLER: Kann Link nicht laden!")
-        term.setCursorPos(1, h-1)
-        term.write(string.sub(url, 1, w)) -- Zeigt den kaputten Link an
-        return 
-    end
+    if not res then return end
     
     isPlaying = true
     while isPlaying do
-        -- Die originalen, funktionierenden 16384 Chunks!
-        local chunk = res.read(16384) 
-        if not chunk then break end
+        local chunk = res.read(4096) 
+        if chunk == nil or chunk == "" then break end
         
         local buffer = {}
-        for i = 1, #chunk do
-            local val = string.byte(chunk, i)
+        if type(chunk) == "string" then
+            for i = 1, #chunk do
+                local val = string.byte(chunk, i)
+                if val > 127 then val = val - 256 end
+                table.insert(buffer, val)
+            end
+        elseif type(chunk) == "number" then
+            local val = chunk
             if val > 127 then val = val - 256 end
             table.insert(buffer, val)
+            for i = 2, 4096 do
+                local b = res.read()
+                if not b then break end
+                if b > 127 then b = b - 256 end
+                table.insert(buffer, b)
+            end
         end
         
         while isPlaying and not speaker.playAudio(buffer, vol) do
@@ -96,65 +127,76 @@ local function playSong(url)
     end
     res.close()
     
+    -- Auto-Play Nächstes Lied
     if isPlaying then 
-        currentIdx = (currentIdx % #currentSongs) + 1
+        currentIdx = currentIdx + 1
+        if currentIdx > #allSongs then currentIdx = 1 end
         os.queueEvent("start_music")
     end
 end
 
-currentSongs = getList(indexURL)
+-- INITIALISIERUNG
+allSongs = getList(indexURL)
+filterSongs()
 drawUI()
 
+-- EVENT LOOPS (Zusammengefasst für reibungslose Eingabe)
 parallel.waitForAny(
     function()
         while true do
-            local _, _, x, y = os.pullEvent("mouse_click")
-            if y >= 3 and y < h then
-                local idx = y - 2
-                if currentSongs[idx] then
-                    currentIdx = idx
-                    isPlaying = false
-                    os.queueEvent("start_music")
-                end
-            elseif y == h then
-                if x <= 10 then
-                    vol = (vol + 0.1 > 1) and 0.1 or vol + 0.1
-                elseif x > 12 and x < 24 then
-                    isPlaying = not isPlaying
-                    if isPlaying then os.queueEvent("start_music") end
-                elseif x >= 25 then
-                    currentSongs = getList(indexURL)
-                end
-            end
-            drawUI()
-        end
-    end,
-    function()
-        while true do
-            local _, key = os.pullEvent("key")
-            if key == keys.r then 
-                currentSongs = getList(indexURL)
+            local event, p1, p2, p3 = os.pullEvent()
+            
+            -- WENN MAN TIPPt (Suche)
+            if event == "char" then
+                searchQuery = searchQuery .. p1
+                filterSongs()
                 drawUI()
-            elseif key == keys.p then
-                isPlaying = not isPlaying
-                if isPlaying then os.queueEvent("start_music") end
-            end
-        end
-    end,
-    function()
-        while true do
-            os.pullEvent("start_music")
-            if currentSongs[currentIdx] then playSong(currentSongs[currentIdx].url) end
-        end
-    end,
-    function()
-        while true do
-            os.sleep(30)
-            local newList = getList(indexURL)
-            if newList and #newList > #currentSongs then
-                currentSongs = newList
-                drawUI()
-            end
-        end
-    end
-)
+            
+            -- LÖSCHEN TASTE (Backspace)
+            elseif event == "key" then
+                if p1 == keys.backspace and #searchQuery > 0 then
+                    searchQuery = string.sub(searchQuery, 1, -2)
+                    filterSongs()
+                    drawUI()
+                end
+                
+            -- MAUS KLICKS
+            elseif event == "mouse_click" then
+                local x, y = p2, p3
+                
+                -- Klick in die Liste
+                if y >= 3 and y < h then
+                    local idx = y - 2
+                    if filteredSongs[idx] then
+                        -- Sucht das geklickte Lied in der Hauptliste
+                        for i, s in ipairs(allSongs) do
+                            if s.url == filteredSongs[idx].url then
+                                currentIdx = i
+                                break
+                            end
+                        end
+                        isPlaying = false
+                        os.queueEvent("start_music")
+                    end
+                
+                -- Klick in den Footer (Steuerelemente)
+                elseif y == h then
+                    if x >= 2 and x <= 5 then           -- ZURÜCK [|<]
+                        if #allSongs > 0 then
+                            currentIdx = currentIdx - 1
+                            if currentIdx < 1 then currentIdx = #allSongs end
+                            isPlaying = false
+                            os.queueEvent("start_music")
+                        end
+                    elseif x >= 7 and x <= 10 then      -- PLAY/PAUSE [||]
+                        isPlaying = not isPlaying
+                        if isPlaying then os.queueEvent("start_music") end
+                    elseif x >= 12 and x <= 15 then     -- VOR [>|]
+                        if #allSongs > 0 then
+                            currentIdx = currentIdx + 1
+                            if currentIdx > #allSongs then currentIdx = 1 end
+                            isPlaying = false
+                            os.queueEvent("start_music")
+                        end
+                    elseif x >= 18 and x <= 26 then     -- LAUTSTÄRKE
+                        vol = (vol + 0.1 > 1) and 0.1 or vol + 0
