@@ -199,4 +199,33 @@ parallel.waitForAny(
                             os.queueEvent("start_music")
                         end
                     elseif x >= 18 and x <= 26 then     -- LAUTSTÄRKE
-                        vol = (vol + 0.1 > 1) and 0.1 or vol + 0
+                        vol = (vol + 0.1 > 1) and 0.1 or vol + 0.1
+                    elseif x >= 29 then                 -- REFRESH
+                        allSongs = getList(indexURL)
+                        filterSongs()
+                    end
+                end
+                drawUI()
+            end
+        end
+    end,
+    -- Audio-Abspieler
+    function()
+        while true do
+            os.pullEvent("start_music")
+            if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
+        end
+    end,
+    -- Auto-Refresh (Alle 30 Sekunden)
+    function()
+        while true do
+            os.sleep(30)
+            local newList = getList(indexURL)
+            if newList and #newList > #allSongs then
+                allSongs = newList
+                filterSongs()
+                drawUI()
+            end
+        end
+    end
+)
