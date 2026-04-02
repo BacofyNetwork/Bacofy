@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY (ORIGINAL UI + SERVER FIX)
+-- PROGRAM: BACOFY (ORIGINAL UI + RAW WORKING)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -27,7 +27,6 @@ local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- Header
     term.setCursorPos(1, 1)
     term.setBackgroundColor(colors.blue)
     term.clearLine()
@@ -36,7 +35,6 @@ local function drawUI()
     term.setTextColor(colors.white)
     term.write(header)
 
-    -- Liste
     term.setBackgroundColor(colors.black)
     for i, item in ipairs(currentSongs) do
         if i > h - 3 then break end
@@ -50,50 +48,47 @@ local function drawUI()
         end
     end
 
-    -- Footer
     term.setCursorPos(1, h)
     term.setBackgroundColor(colors.gray)
     term.clearLine()
     term.setTextColor(colors.white)
-    term.write(" VOL: " .. math.floor(vol*100) .. "% | [P] PLAY/STOP | [R] REFRESH")
+    term.write(" VOL: " .. math.floor(vol*100) .. "% | [P] PLAY | [R] REFRESH")
 end
 
--- AUDIO ENGINE (Kugelsicher für alle Server!)
 local function playSong(url)
-    if not speaker then return end
+    if not speaker then 
+        term.setCursorPos(1, h-1)
+        term.setTextColor(colors.red)
+        term.write("FEHLER: Kein Speaker gefunden!")
+        return 
+    end
+    
     local res = http.get({ url = url, binary = true })
-    if not res then return end
+    if not res then 
+        -- HIER IST DER DEBUGGER: Wenn der Link kaputt ist, sagt er es dir jetzt!
+        term.setCursorPos(1, h-2)
+        term.setBackgroundColor(colors.black)
+        term.setTextColor(colors.red)
+        term.clearLine()
+        term.write("404 FEHLER: Kann Link nicht laden!")
+        term.setCursorPos(1, h-1)
+        term.write(string.sub(url, 1, w)) -- Zeigt den kaputten Link an
+        return 
+    end
     
     isPlaying = true
     while isPlaying do
-        local chunk = res.read(4096) 
-        if chunk == nil or chunk == "" then break end
+        -- Die originalen, funktionierenden 16384 Chunks!
+        local chunk = res.read(16384) 
+        if not chunk then break end
         
         local buffer = {}
-        
-        -- FIX: Wir prüfen, was der Server uns gibt (Text oder Zahlen)
-        if type(chunk) == "string" then
-            for i = 1, #chunk do
-                local val = string.byte(chunk, i)
-                if val > 127 then val = val - 256 end
-                table.insert(buffer, val)
-            end
-        elseif type(chunk) == "number" then
-            -- Fallback für Server, die Zahlen einzeln schicken
-            local val = chunk
+        for i = 1, #chunk do
+            local val = string.byte(chunk, i)
             if val > 127 then val = val - 256 end
             table.insert(buffer, val)
-            
-            -- Wir lesen den Rest des Blocks einzeln nach
-            for i = 2, 4096 do
-                local b = res.read()
-                if not b then break end
-                if b > 127 then b = b - 256 end
-                table.insert(buffer, b)
-            end
         end
         
-        -- Abspielen
         while isPlaying and not speaker.playAudio(buffer, vol) do
             os.pullEvent("speaker_audio_empty")
         end
@@ -124,10 +119,10 @@ parallel.waitForAny(
             elseif y == h then
                 if x <= 10 then
                     vol = (vol + 0.1 > 1) and 0.1 or vol + 0.1
-                elseif x > 12 and x < 26 then
+                elseif x > 12 and x < 24 then
                     isPlaying = not isPlaying
                     if isPlaying then os.queueEvent("start_music") end
-                elseif x >= 27 then
+                elseif x >= 25 then
                     currentSongs = getList(indexURL)
                 end
             end
@@ -139,11 +134,11 @@ parallel.waitForAny(
             local _, key = os.pullEvent("key")
             if key == keys.r then 
                 currentSongs = getList(indexURL)
+                drawUI()
             elseif key == keys.p then
                 isPlaying = not isPlaying
                 if isPlaying then os.queueEvent("start_music") end
             end
-            drawUI()
         end
     end,
     function()
