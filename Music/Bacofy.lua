@@ -160,13 +160,6 @@ local function drawUI()
         end
     end
 
-    -- Visual Spacer (Dots) above controls
-    term.setBackgroundColor(cListBg)
-    term.setTextColor(colors.gray)
-    term.setCursorPos(2, h-3)
-    term.clearLine()
-    term.write(" . . . . . ")
-
     -- ==========================================
     -- CONTROLS AREA (Line h-2 and h-1) - Gray Background
     -- ==========================================
