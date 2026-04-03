@@ -1,6 +1,6 @@
 -- ==========================================
 -- PROGRAM: BACOFY PRO (Cyber-Red Edition)
--- ULTIMATE PROGRESS BAR UPDATE
+-- ULTIMATE FINAL VERSION: CENTERED PROGRESS
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -105,7 +105,7 @@ local function drawUI()
         term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
-    -- LIST AREA (Line 3 to h-4) -- PLATZ GEMACHT FÜR DIE PROGRESS BAR!
+    -- LIST AREA (Line 3 to h-4)
     local listStartY = 3
     local listEndY = h - 4
     local maxDisplay = listEndY - listStartY + 1
@@ -163,11 +163,11 @@ local function drawUI()
     
     local cButtonAccent = colors.red
 
-    -- PROGRESS BAR (Line h-3)
+    -- PROGRESS BAR (Line h-3) - JETZT PERFEKT ZENTRIERT
     term.setCursorPos(1, h - 3)
     term.clearLine()
-    local barW = 24
-    local barStartX = cx - math.floor(barW / 2)
+    local barW = 20 -- Breite angepasst für bessere Symmetrie
+    local barStartX = math.max(1, cx - math.floor(barW / 2))
     
     term.setCursorPos(barStartX, h - 3)
     if totalBytes > 0 and (isPlaying or isPaused) then
@@ -249,12 +249,11 @@ local function drawUI()
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE (MIT ECHTEM SEEKING!)
+-- AUDIO STREAMING ENGINE
 -- ==========================================
 local function playSong(url)
     if not speaker then return end
     
-    -- HTTP Range Request Header bauen, falls wir springen
     local reqHeaders = {}
     if seekTargetRatio and totalBytes > 0 then
         currentBytes = math.floor(totalBytes * seekTargetRatio)
@@ -274,7 +273,6 @@ local function playSong(url)
         return 
     end
     
-    -- Hole Dateigröße für die Progress Bar
     local respHeaders = res.getResponseHeaders and res.getResponseHeaders() or {}
     if currentBytes == 0 then
         totalBytes = tonumber(respHeaders["Content-Length"]) or tonumber(respHeaders["content-length"]) or 0
@@ -321,7 +319,6 @@ local function playSong(url)
                     end
                 end
                 
-                -- Live Update der Progress Bar (ca. jede Sekunde)
                 chunksRead = chunksRead + 1
                 if chunksRead % 3 == 0 then
                     drawUI() 
@@ -431,9 +428,8 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- KLICKBARE PROGRESS BAR (Line h-3)
                 elseif y == h - 3 then
-                    local barW = 24
+                    local barW = 20
                     local barStartX = cx - math.floor(barW / 2)
                     if x >= barStartX and x < barStartX + barW then
                         if totalBytes > 0 and (isPlaying or isPaused) then
@@ -444,7 +440,6 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- MEDIA CONTROLS (Line h-2)
                 elseif y == h - 2 then
                     if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
                         if #allSongs > 0 then
@@ -486,7 +481,6 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- VOLUME CONTROLS (Line h-1)
                 elseif y == h - 1 then
                     local volStr = tostring(math.floor(vol * 100))
                     if #volStr == 1 then volStr = "0" .. volStr end
