@@ -321,7 +321,7 @@ parallel.waitForAny(
                     -- Title area, do nothing
                 elseif y == 2 then
                     if view == "MASTER" and x > w - 8 then
-                        playlists = getList(masterURL) 
+                        playlists = getList(masterURL) -- [R] REF
                     elseif view == "PLAYLIST" and x <= 9 then
                         view = "MASTER" 
                         scrollOffset = 0
