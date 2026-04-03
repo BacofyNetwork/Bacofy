@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- BACOFY PRO (Cyber-Red Edition)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
