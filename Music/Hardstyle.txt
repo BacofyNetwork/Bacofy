@@ -1,2 +1,3 @@
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HolyPriestNetherworldHolyAtlantis.raw, Holy Priest & Netherworld - Holy Atlantis
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Hammertime.raw, Hammertime
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Cocaina.raw, Cocaina
