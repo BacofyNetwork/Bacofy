@@ -64,9 +64,10 @@ local function drawUI()
     local cHead = colors.red
     local cHeadText = colors.white
     local cListBg = colors.black
-    local cItemBg = colors.gray -- fulfills original sketch "blau rest" idea
-    local cActiveItemBg = colors.red -- Lime is the ultimate contrast on black/red
+    local cItemBg = colors.gray
+    local cActiveItemBg = colors.red 
     local cActiveItemText = colors.white
+    local cControlBg = colors.gray 
 
     -- ==========================================
     -- HEADER (Line 1) - Red Bar
@@ -94,25 +95,23 @@ local function drawUI()
         term.write(" Playlists")
         term.setCursorPos(w - 7, 2)
         term.setTextColor(colors.lightGray)
-        term.write("[R] REF") -- Use [R] for clarity
+        term.write("[R] REF") 
     elseif view == "PLAYLIST" then
-        -- Searchbar Only - fulfill sketch request to remove PL name
         term.write(" (<-) Search: ")
         term.setTextColor(colors.white)
-        term.write(string.sub(searchQuery .. "_", 1, w - 15)) -- Pulse underscore
+        term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
     -- ==========================================
-    -- LIST AREA (Line 3 to h-3) - Red background with boxes
+    -- LIST AREA (Line 3 to h-3)
     -- ==========================================
     local listStartY = 3
     local listEndY = h - 3
     local maxDisplay = listEndY - listStartY + 1
     
-    -- Fill List Background
     for y = listStartY, listEndY do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(cListBg) -- Entire body is Black
+        term.setBackgroundColor(cListBg) 
         term.clearLine()
     end
     
@@ -124,7 +123,6 @@ local function drawUI()
     end
     if scrollOffset < 0 then scrollOffset = 0 end
     
-    -- Draw List items
     for i = 1, maxDisplay do
         local idx = i + scrollOffset
         local item = listToDraw[idx]
@@ -146,13 +144,12 @@ local function drawUI()
                 end
             end
             
-            -- Set colors based on original sketch logic (Cyan idle, Lime/Yellow active)
             if isActive then
                 term.setBackgroundColor(cActiveItemBg)
                 term.setTextColor(cActiveItemText)
             else
-                term.setBackgroundColor(cItemBg) -- fulfill "blau rest" request
-                term.setTextColor(colors.white) -- High contrast white on cyan/red
+                term.setBackgroundColor(cItemBg) 
+                term.setTextColor(colors.white) 
             end
             
             term.clearLine()
@@ -161,12 +158,11 @@ local function drawUI()
     end
 
     -- ==========================================
-    -- CONTROLS AREA (Line h-2 and h-1) - Gray Background
+    -- CONTROLS AREA (Line h-2 and h-1) - GRAY Background
     -- ==========================================
-    term.setBackgroundColor(colors.gray)
+    term.setBackgroundColor(cControlBg) 
     term.setTextColor(colors.white)
     
-    -- Red accents for buttons
     local cButtonAccent = colors.red
 
     -- Media Controls (h-2) dynamically centered
@@ -203,11 +199,11 @@ local function drawUI()
     term.setCursorPos(startX + 7, h - 1)
     term.setTextColor(colors.white)
     term.write("VOL: ")
-    term.setBackgroundColor(colors.black) -- Highlight volume value
+    term.setBackgroundColor(colors.black)
     term.setTextColor(colors.white)
     term.write(volStr)
     
-    term.setBackgroundColor(colors.gray)
+    term.setBackgroundColor(cControlBg) 
     term.setTextColor(cButtonAccent)
     term.setCursorPos(startX + #vText - 3, h - 1)
     term.write("[+]")
@@ -325,8 +321,8 @@ parallel.waitForAny(
                     -- Title area, do nothing
                 elseif y == 2 then
                     if view == "MASTER" and x > w - 8 then
-                        playlists = getList(masterURL) -- [R] REF (unchanged click logic)
-                    elseif view == "PLAYLIST" and x <= 9 then -- (<-) Back Button click area extended
+                        playlists = getList(masterURL) 
+                    elseif view == "PLAYLIST" and x <= 9 then
                         view = "MASTER" 
                         scrollOffset = 0
                     end
@@ -364,7 +360,7 @@ parallel.waitForAny(
                     
                     end
                     
-                -- MEDIA CONTROLS Zone (Line h-2) - Robust dynamic click logic
+                -- MEDIA CONTROLS Zone (Line h-2)
                 elseif y == h - 2 then
                     if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
                         if #allSongs > 0 then
@@ -392,9 +388,8 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- VOLUME CONTROLS Zone (Line h-1) - Fulfill separated button sketch request
+                -- VOLUME CONTROLS Zone (Line h-1)
                 elseif y == h - 1 then
-                    -- Re-calculate separated click zones based on UI string
                     local volStr = tostring(math.floor(vol * 100))
                     if #volStr == 1 then volStr = "0" .. volStr end
                     if volStr == "100" then volStr = "MAX" end
