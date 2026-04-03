@@ -1,18 +1,22 @@
 -- ==========================================
 -- PROGRAM: BACOFY PRO (Cyber-Red Edition)
--- FINAL VERSION: AUTO-MONITOR, PROGRESS BAR & 5s SCAN
+-- FINAL VERSION: WIRELESS BROADCASTING
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
-local monitor = peripheral.find("monitor") -- Sucht nach Monitoren
+local monitor = peripheral.find("monitor") 
+local modem = peripheral.find("modem") -- NEU: Das Wireless Modem
+
+local BROADCAST_CHANNEL = 8585 -- Der Funkkanal für die Base
+
 local baseURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/"
 local masterURL = baseURL .. "master.txt"
 
 -- MONITOR LOGIC
-local display = term -- Standardmäßig der Computer-Screen
+local display = term 
 if monitor then
     display = monitor
-    display.setTextScale(0.5) -- Kleinere Schrift für mehr Platz auf Monitoren
+    display.setTextScale(0.5) 
 end
 
 -- STATE VARIABLES
@@ -85,18 +89,24 @@ local function drawUI()
     local cActiveItemText = colors.white
     local cControlBg = colors.gray 
 
-    -- HEADER (Line 1)
+    -- HEADER
     display.setCursorPos(1, 1)
     display.setBackgroundColor(cHead)
     display.setTextColor(cHeadText)
     display.clearLine()
-    display.write(" BACOFY PRO 2.0")
+    
+    -- Anzeige, ob wir senden
+    if modem then
+        display.write(" BACOFY PRO 2.0 [WIRELESS TX]")
+    else
+        display.write(" BACOFY PRO 2.0")
+    end
     
     local timeStr = textutils.formatTime(os.time(), true)
     display.setCursorPos(w - #timeStr, 1)
     display.write(timeStr)
     
-    -- SUBHEADER / SEARCH (Line 2)
+    -- SUBHEADER
     display.setCursorPos(1, 2)
     display.setBackgroundColor(colors.black)
     display.setTextColor(colors.white)
@@ -113,7 +123,7 @@ local function drawUI()
         display.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
-    -- LIST AREA (Line 3 to h-4)
+    -- LIST AREA
     local listStartY = 3
     local listEndY = h - 4
     local maxDisplay = listEndY - listStartY + 1
@@ -168,10 +178,9 @@ local function drawUI()
     -- CONTROLS AREA BACKGROUND
     display.setBackgroundColor(cControlBg) 
     display.setTextColor(colors.white)
-    
     local cButtonAccent = colors.red
 
-    -- PROGRESS BAR (Line h-3)
+    -- PROGRESS BAR
     display.setCursorPos(1, h - 3)
     display.clearLine()
     local barW = w - 2 
@@ -192,7 +201,7 @@ local function drawUI()
         display.write(string.rep("-", barW))
     end
 
-    -- MEDIA BUTTONS (Line h-2)
+    -- MEDIA BUTTONS
     display.setCursorPos(1, h - 2)
     display.clearLine()
     local playIcon = (isPlaying and not isPaused) and "||" or "> "
@@ -208,7 +217,7 @@ local function drawUI()
     display.setCursorPos(cx + 10, h - 2)
     display.write(">>")
     
-    -- VOLUME CONTROLS (Line h-1)
+    -- VOLUME CONTROLS
     display.setCursorPos(1, h - 1)
     display.clearLine()
     
@@ -235,7 +244,7 @@ local function drawUI()
     display.setCursorPos(vStartX + #vText - 3, h - 1)
     display.write("[+]")
 
-    -- STATUS FOOTER (Line h)
+    -- STATUS FOOTER
     display.setCursorPos(1, h)
     display.setBackgroundColor(cHead)
     display.setTextColor(cHeadText)
@@ -254,10 +263,11 @@ local function drawUI()
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE
+-- AUDIO STREAMING ENGINE (WITH WIRELESS)
 -- ==========================================
 local function playSong(url)
-    if not speaker then return end
+    -- Wenn weder Speaker noch Modem da ist, können wir nichts tun
+    if not speaker and not modem then return end
     
     local reqHeaders = {}
     if seekTargetRatio and totalBytes > 0 then
@@ -331,11 +341,21 @@ local function playSong(url)
             
             local queued = false
             while isPlaying and not forceSkip and not isPaused and not seekTargetRatio and not queued do
-                if speaker.playAudio(buffer, vol) then
+                if speaker then
+                    -- Normaler lokaler Lautsprecher + Synchroner Broadcast
+                    if speaker.playAudio(buffer, vol) then
+                        if modem then modem.transmit(BROADCAST_CHANNEL, BROADCAST_CHANNEL, {b = buffer, v = vol}) end
+                        queued = true
+                        pendingBuffer = nil
+                    else
+                        os.pullEvent()
+                    end
+                else
+                    -- Fallback: Nur Serverbetrieb (ohne eigenen Lautsprecher)
+                    if modem then modem.transmit(BROADCAST_CHANNEL, BROADCAST_CHANNEL, {b = buffer, v = vol}) end
+                    os.sleep(0.3) -- Pufferzeit simulieren
                     queued = true
                     pendingBuffer = nil
-                else
-                    os.pullEvent()
                 end
             end
             
@@ -368,7 +388,6 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- Check for monitor_touch or mouse_click
             local x, y, side
             if event == "mouse_click" and display == term then
                 x, y = p2, p3
@@ -451,7 +470,7 @@ parallel.waitForAny(
                     end
                     
                 elseif y == h - 2 then
-                    if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
+                    if x >= cx - 11 and x <= cx - 7 then
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
@@ -461,7 +480,7 @@ parallel.waitForAny(
                             os.queueEvent("audio_update")
                             drawUI()
                         end
-                    elseif x >= cx - 4 and x <= cx then        -- [> / ||] Play/Pause
+                    elseif x >= cx - 4 and x <= cx then
                         if #allSongs > 0 then
                             if not isPlaying then
                                 isPlaying = true
@@ -472,14 +491,14 @@ parallel.waitForAny(
                             os.queueEvent("audio_update")
                             drawUI() 
                         end
-                    elseif x >= cx + 3 and x <= cx + 7 then    -- [[]] Stop
+                    elseif x >= cx + 3 and x <= cx + 7 then
                         isPlaying = false
                         isPaused = false
                         seekTargetRatio = nil
                         currentBytes = 0
                         os.queueEvent("audio_update")
                         drawUI()
-                    elseif x >= cx + 10 and x <= cx + 14 then  -- [>>] Next
+                    elseif x >= cx + 10 and x <= cx + 14 then
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
@@ -519,9 +538,9 @@ parallel.waitForAny(
             end
         end
     end,
-    function() -- AUTO-SCAN THREAD
+    function()
         while true do
-            os.sleep(5) -- Sucht alle 5 Sekunden nach Updates
+            os.sleep(5)
             if view == "MASTER" then
                 playlists = getList(masterURL)
             else
