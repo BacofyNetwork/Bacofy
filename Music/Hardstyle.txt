@@ -1,3 +1,304 @@
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HolyPriestNetherworldHolyAtlantis.raw, Holy Priest & Netherworld - Holy Atlantis
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Hammertime.raw, Hammertime
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Cocaina.raw, Cocaina
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AUDIODAMAGE.raw, AUDIO DAMAGE
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OperationCore.raw, Operation: Core
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/IrishBanger.raw, Irish Banger
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TimeToKillAnotherOneEstasiaRemix.raw, Time To Kill Another One (Estasia Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SoundOfTheBeast.raw, Sound Of The Beast
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PushSomeBody.raw, Push Some Body
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Number1.raw, Number 1
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MiMadreExtendedMix.raw, Mi Madre (Extended Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HeyMambo.raw, Hey Mambo
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WannaPlay.raw, Wanna Play?
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WatchYourBackRadioEdit.raw, Watch Your Back (Radio Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CrispyEDIT2023.raw, Crispy (EDIT 2023)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DropGirlOriginalMix.raw, Drop Girl (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HereWeGo.raw, Here We Go
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MassiveBassOriginalMix.raw, Massive Bass (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HeyxOriginalMix.raw, Hey x (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KlaplongenOriginalMix.raw, Klaplongen (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OpeningStatements.raw, Opening Statements
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TroubleOriginalMix.raw, Trouble (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ItsADream2K19.raw, It’s A Dream 2K19
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OnlyKickRushinMix.raw, Only Kick (Rushin Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MeanMachineOfficialSupremacy2017Anthem.raw, Mean Machine (Official Supremacy 2017 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AlphaRebel.raw, Alpha Rebel
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CantTakeThis.raw, Can't Take This
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Payback.raw, Payback
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Critter.raw, Critter
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/COVID19.raw, COVID-19
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ALPHA.raw, ALPHA
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/REMEMBERTHENAMEOriginalMix.raw, REMEMBER THE NAME (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OdeToTheGodfatherOriginalMix.raw, Ode To The Godfather (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BreakingNewsRattnTattn.raw, Breaking News ("Rattn Tattn")
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BassfaceThaPlayahRemix.raw, Bassface (Tha Playah Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/INeedYou.raw, I Need You
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LegendsNeverDieBKJNvsPartyraiser2018FestivalAnthem.raw, Legends Never Die (BKJN vs Partyraiser 2018 Festival Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BustYourChest.raw, Bust Your Chest
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Veneno.raw, Veneno
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InfragmentGroapa.raw, Infragment Groapa
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NobodyLikesUs.raw, Nobody Likes Us
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OnLeashMBKRemix.raw, On Leash (MBK Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SelfDestructionOriginalMix.raw, Self Destruction (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SuckasHate.raw, Suckas Hate
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SckBtchOriginalMix.raw, S!ck B!tch (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HCMadeMeDoIT.raw, HC Made Me Do IT
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RippedOff.raw, Ripped Off
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DarkestHourTheClock.raw, Darkest Hour (The Clock)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Zombie.raw, Zombie
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AllNight.raw, All Night
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ItsMeSurpriseOriginalMix.raw, It's Me Surprise (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ItsCalledXTC.raw, It's Called XTC
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InvincibleRadioEdit.raw, Invincible (Radio Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OpIfearTITN.raw, Op.I《fear-TITΛN-》
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EnterTheDomeOfficialThunderdome2022Anthem.raw, Enter The Dome (Official Thunderdome 2022 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OntheEdge.raw, On the Edge
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MtfckingLoud.raw, Mtfcking Loud
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Kokeen.raw, Kokeen
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SaviourMixed.raw, Saviour (Mixed)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Virgin.raw, Virgin
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Paperback.raw, Paperback
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BasskickParadise.raw, Basskick Paradise
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GetDissed.raw, Get Dissed
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InControl.raw, In Control
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CokeBoy.raw, Coke Boy
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DOMINATIONSEFARemix.raw, DOMINATION (SEFA Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KicksVanStaal.raw, Kicks Van Staal
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Raggen.raw, Raggen
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Stronger.raw, Stronger
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HardcoreNightOriginalMix.raw, Hardcore Night (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FineNight.raw, Fine Night
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhosYourDaddy.raw, Who’s Your Daddy
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RobotGangbang.raw, Robot Gangbang
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ImaPickle.raw, I'm a Pickle
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TakeThePills.raw, Take The Pills
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BasementOriginalMix.raw, Basement (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InflictThePain.raw, Inflict The Pain
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DarkMatter.raw, Dark Matter
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/YES.raw, YES!
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheUltimatePaulMashUp.raw, The Ultimate Paul Mash-Up
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PhaseOneNosferatuRemix.raw, Phase One (Nosferatu Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BassJourney.raw, Bass Journey
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DoubleHeadedSnakeOfficialSnakepit2019Anthem.raw, Double Headed Snake (Official Snakepit 2019 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PeaceMaker.raw, PeaceMaker
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TimeToRage.raw, Time To Rage
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/IDontLikeYou.raw, I Don't Like You
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HatersOriginalMix.raw, Haters (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MakeItClapOriginalMix.raw, Make It Clap (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AlternativeRush.raw, Alternative Rush
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ComeWithMe.raw, Come With Me
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FakeShizzle.raw, Fake Shizzle
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TOOHOTOriginalMix.raw, TOO HOT (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DissedEdit.raw, Dissed (Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/IWantYouRadioEdit.raw, I Want You (Radio Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ToTheDeathOfficialThunderdome2019Anthem.raw, To The Death (Official Thunderdome 2019 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ThePossession.raw, The Possession
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DeathDestructionMaliceLiveEdit.raw, Death Destruction (Malice Live Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BadAttitudeDeadlyGunsRemix.raw, Bad Attitude (Deadly Guns Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SuckMyPuzzy.raw, Suck My Puzzy
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DISCOTEK.raw, DISCOTEK
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NeverDiefeatHyruleWar.raw, Never Die (feat. Hyrule War)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Extortionist.raw, Extortionist
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LockdownRiotShiftRemix.raw, Lockdown (Riot Shift Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OmegaOriginalMix.raw, Omega (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GANGOriginalMix.raw, GANG (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Skyfall.raw, Skyfall
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OnMyDickOriginalMix.raw, On My Dick (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Cracksmokers.raw, Cracksmokers
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RECORDSKIPDitzKickzRemix.raw, RECORD SKIP (DitzKickz Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LandOfConfusion.raw, Land Of Confusion
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CokeInMyNose.raw, Coke In My Nose
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PUHOriginalMix.raw, PU$H (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SmileonHisFaceEdit.raw, Smile on His Face (Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Moonlight.raw, Moonlight
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FEAROriginalMix.raw, FEAR (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GFU.raw, GFU
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheLight.raw, The Light
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EMOJI.raw, EMOJI
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/L4MB0OriginalMix.raw, L4MB0 (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KillerInstinctOriginalMix.raw, Killer Instinct (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RaiseHell.raw, Raise Hell
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Unbelievers.raw, Unbelievers
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SonicStormOfficialSyndicate2019Anthem.raw, Sonic Storm (Official Syndicate 2019 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/XMarksTheSpotOfficialExodus2020Anthem.raw, X Marks The Spot (Official Exodus 2020 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Freddy.raw, Freddy
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Addiction.raw, Addiction
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Elevate.raw, Elevate
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MagnumOpusOfficialMastersofHardcore2020Anthem.raw, Magnum Opus (Official Masters of Hardcore 2020 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SoStrong.raw, So Strong
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Brutal80.raw, Brutal 8.0
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PrimalOfficialMastersofHardcoreAustria2020Anthem.raw, Primal (Official Masters of Hardcore Austria 2020 Anthem)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MUTILATE.raw, MUTILATE
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Moshpit.raw, Moshpit
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MoveYourBody.raw, Move Your Body
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RawCombat.raw, Raw Combat
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HardcorePower.raw, Hardcore Power
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Stripper.raw, Stripper
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HelloBaby.raw, Hello Baby / Привет детка
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HOAX.raw, HOAX
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LaddyDaddyDaddy.raw, Laddy-Daddy-Daddy
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SickCratic.raw, Sick Cratic
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SpaghettiLoveMizzBehaveRemix.raw, Spaghetti Love (Mizz Behave Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LASERBEAMS.raw, LASER BEAMS ⚠️
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GetItCrackinSefaRemix.raw, Get It Crackin (Sefa Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PrisonOriginalMix.raw, Prison (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BTCH.raw, B#TCH
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FtheIndustry.raw, F the Industry
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Drugs.raw, Drugs
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CrispyBassdrumNVitralpresentsBOMBSQUADRemix.raw, Crispy Bassdrum (N-Vitral presents BOMBSQUAD Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BabylonDead.raw, Babylon Dead
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SurviveTheStreetOriginalMix.raw, Survive The Street (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Radioactive.raw, Radioactive
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BFG.raw, BFG
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheOmega.raw, The Omega
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LostInThoughts.raw, Lost In Thoughts
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Invincible.raw, Invincible
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Beastmode20.raw, Beastmode 2.0
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Innovhate.raw, Innovhate
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PrefixForDeathOriginalMix.raw, Prefix For Death (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Boundaries.raw, Boundaries
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BassForTheStreets.raw, Bass For The Streets
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/StayintheLight.raw, Stay in the Light
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SHAKEITOriginalMix.raw, SHAKE IT (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OneAndOnlyOriginalMix.raw, One And Only (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AnotherDayOriginalMix.raw, Another Day (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FeelSoGoodMaliceLiveEdit.raw, Feel So Good (Malice Live Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FingerOnTheTrigger.raw, Finger On The Trigger
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RipItOpen.raw, Rip It Open
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MoshpitRadioMix.raw, Moshpit (Radio Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DROPPINLIKEOriginalMix.raw, DROPPIN' LIKE (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FallingCyborgRemix.raw, Falling (Cyborg Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BewareofMeDrLooneyRemix.raw, Beware of Me (Dr Looney Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BreakawayfeatClaireClassicore.raw, Breakaway (feat. Claire Classicore)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LOCA.raw, LOCA
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OverdoseOriginalMix.raw, Overdose (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/VolGasMetDieBas.raw, Vol Gas Met Die Bas
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InMyHouse.raw, In My House
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Inthenameof.raw, In the name of
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhoAmI.raw, Who Am I
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheStorm.raw, The Storm
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SuLeManiRadioMix.raw, Su Le Mani (Radio Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Switch.raw, Switch!
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/hardcorenewgeneration.raw, hardcore new generation
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ImNuclear.raw, I'm Nuclear
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/StayHigh.raw, Stay High
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Rage.raw, Rage
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CrushThem.raw, Crush Them
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LETSFITUPLAMBO25.raw, LET'S F IT UP (LAMBO 2.5)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GANGSTAH.raw, GANGSTAH
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ScreamForMercySickmodeAvocRemix.raw, Scream For Mercy! (Sickmode & Avoc Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LetsGo.raw, Lets Go
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BelieveItOriginalMix.raw, Believe It (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SINS.raw, SINS
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HatersOfGod.raw, Haters Of God
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhenIRhymeOriginalMix.raw, When I Rhyme (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LetItBurn.raw, Let It Burn
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KAMIKAZEThyronRemix.raw, KAMIKAZE (Thyron Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HouseFire.raw, House Fire
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Megadrive.raw, Megadrive
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NoParadise.raw, No Paradise
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RIGHTNOWOriginalMix.raw, RIGHT NOW (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ShutupOriginalMix.raw, Shut up! (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Izagila.raw, Izagila
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SupermanfeatVato.raw, Superman (feat. Vato)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InfortheKill.raw, In for the Kill
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BassinYourFace2021KickEdit.raw, Bass in Your Face (2021 Kick Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KillerSquad.raw, Killer Squad
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KickItRadioEdit.raw, Kick It (Radio Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FeedTheFlameMinusMilitiaRemix.raw, Feed The Flame (Minus Militia Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PsikoDrome.raw, PsikoDrome
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Jecroisquonvapartouzer.raw, Je crois qu'on va partouzer
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/COLOROFTHEUNICORN.raw, COLOR OF THE UNICORN
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HeavyArtilleryReloadedEdit.raw, Heavy Artillery (Reloaded Edit)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Reset.raw, Reset
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CourtOfJustice.raw, Court Of Justice
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Monster.raw, Monster
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OmniaOfKicks.raw, Omnia Of Kicks
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GetDumb.raw, Get Dumb!
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TakinOver.raw, Takin' Over
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheThousandYardStare.raw, The Thousand Yard Stare
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/STRAIGHTOUTTAFUTUREOriginalMix.raw, STRAIGHT OUTTA FUTURE (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/UnleashYourAggressionSuppressionAnthem2019OriginalMix.raw, Unleash Your Aggression (Suppression Anthem 2019) (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DiscoBitch.raw, Disco Bitch
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AtNight.raw, At Night
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Partystarter.raw, Partystarter
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MORETHANHUMANOriginalMix.raw, MORE THAN HUMAN (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Follower.raw, Follower
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SideFxs.raw, Side Fx's
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/HurtYou.raw, Hurt You
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FunkySht.raw, Funky Sh!t
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Numb.raw, Numb
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RockThaParty.raw, Rock Tha Party
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AI.raw, A.I.
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/VendettaXQlusiveOST.raw, Vendetta (X-Qlusive OST)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ThisIsMyBassline.raw, This Is My Bassline
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhereHaveYouBeen.raw, Where Have You Been
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LetsGo.raw, Let's Go
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NeverAgainREDBLOODEDIT.raw, Never Again (RED BLOOD EDIT)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KickBack.raw, Kick Back
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OverloaderOriginalMix.raw, Overloader (Original Mix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BasslineBreaker.raw, Bassline Breaker
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/INSOMNIATECHNO.raw, INSOMNIA (TECHNO)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BuryingCowards.raw, Burying Cowards
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GoRaw.raw, Go Raw
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MELODY.raw, MELODY
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TurnTheTide.raw, Turn The Tide
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Paris.raw, Paris
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ILoveIt.raw, I Love It
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SoHot.raw, So Hot
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DropThatBeat200BPMVersion.raw, Drop That Beat (200 BPM Version)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/bxtch.raw, bxtch
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LikeaG6.raw, Like a G6
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ICONS.raw, ICONS
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DevilsMotel.raw, Devil's Motel
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ZeroGravity.raw, Zero Gravity
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FeedYourSoul.raw, Feed Your Soul
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RestInPieces.raw, Rest In Pieces
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ICantBelieveIt.raw, I Can't Believe It
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhatYouGonnaDo.raw, What You Gonna Do
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Waterfall.raw, Waterfall
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Violent.raw, Violent
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Freestylers.raw, Freestylers
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RatKiller.raw, Rat Killer
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Falling.raw, Falling
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TAKAYAKAHI.raw, TAKAYAKAHI
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NeverKnown.raw, Never Known
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PAZZO.raw, PAZZO
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheHeist.raw, The Heist
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FATICO.raw, FA TI CO
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AllNightLong.raw, All Night Long
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Dopamine.raw, Dopamine
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/IfIDieYoung.raw, If I Die Young
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Lonely.raw, Lonely
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FavouriteSong.raw, Favourite Song
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Partystarter.raw, Partystarter
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GimmeThatGas.raw, Gimme That Gas
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PressurePleasure.raw, Pressure Pleasure
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FromTheUndergroundDrokzRemix.raw, From The Underground (Drokz Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACIDBALADE.raw, ACID BALADE
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Fight.raw, Fight
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AllEyesOnMe.raw, All Eyes On Me
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DarkSmile.raw, Dark Smile
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FENDIONMYEYES.raw, FENDI ON MY EYES
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/YouCantSee.raw, You Can't See
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OasisTheDarkHorrorRemix.raw, Oasis (The Dark Horror Remix)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FeelTheGroundShake.raw, Feel The Ground Shake
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LUNATIC.raw, LUNATIC
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FESTIVALWECKERGutenMorgen.raw, FESTIVAL WECKER (Guten Morgen)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PiepCaroline.raw, Piep Caroline
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TURNITUP.raw, TURN IT UP!
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/IDontGiveAShit.raw, I Don't Give A Shit
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Brainshock.raw, Brainshock
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FromTheUndergroundRaveCore.raw, From The Underground (Rave Core)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MOVE2DABEAT.raw, MOVE 2 DA BEAT
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DOWNLOW.raw, DOWN LOW
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Golden.raw, Golden
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Haunted.raw, Haunted
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RazorSharp.raw, Razor Sharp
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CantGetYouOutofMyHead.raw, Can't Get You Out of My Head
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DopeTrack.raw, Dope Track
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Madness.raw, Madness
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/WhenLoveTakesOver.raw, When Love Takes Over
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PullIt.raw, Pull It
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OutOfControl.raw, Out Of Control

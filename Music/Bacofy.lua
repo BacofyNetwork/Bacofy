@@ -1,17 +1,18 @@
 -- ==========================================
--- PROGRAM: BACOFY 
+-- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- FINAL VERSION: AUTO-MONITOR, PROGRESS BAR & 5s SCAN
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
-local monitor = peripheral.find("monitor") 
+local monitor = peripheral.find("monitor") -- Sucht nach Monitoren
 local baseURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/"
 local masterURL = baseURL .. "master.txt"
 
 -- MONITOR LOGIC
-local display = term 
+local display = term -- Standardmäßig der Computer-Screen
 if monitor then
     display = monitor
-    display.setTextScale(0.5) 
+    display.setTextScale(0.5) -- Kleinere Schrift für mehr Platz auf Monitoren
 end
 
 -- STATE VARIABLES
@@ -70,7 +71,7 @@ local function loadPlaylist(name)
 end
 
 -- ==========================================
--- UI DRAW ENGINE 
+-- UI DRAW ENGINE (Cyber-Red Aesthetic)
 -- ==========================================
 local function drawUI()
     display.setBackgroundColor(colors.black)
@@ -89,7 +90,7 @@ local function drawUI()
     display.setBackgroundColor(cHead)
     display.setTextColor(cHeadText)
     display.clearLine()
-    display.write(" Bacofy ")
+    display.write(" BACOFY PRO 2.0")
     
     local timeStr = textutils.formatTime(os.time(), true)
     display.setCursorPos(w - #timeStr, 1)
@@ -518,9 +519,9 @@ parallel.waitForAny(
             end
         end
     end,
-    function()
+    function() -- AUTO-SCAN THREAD
         while true do
-            os.sleep(30)
+            os.sleep(5) -- Sucht alle 5 Sekunden nach Updates
             if view == "MASTER" then
                 playlists = getList(masterURL)
             else

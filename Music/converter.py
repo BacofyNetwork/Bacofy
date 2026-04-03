@@ -59,8 +59,10 @@ class BacofyApp(ctk.CTk):
         threading.Thread(target=self.process, args=(mode,)).start()
 
     def process(self, mode):
+        # Absoluter Pfad, damit die Dateien GARANTIERT im richtigen Ordner landen
         music_dir = os.path.abspath(os.path.join(os.getcwd(), "Music"))
         
+        # Felder auslesen je nach aktivem Tab
         if mode == "single":
             url = self.s_url.get().strip()
             pl_name = self.s_pl.get().strip() or "Unsortiert"
@@ -80,6 +82,7 @@ class BacofyApp(ctk.CTk):
                 self.btn_m.configure(state="normal")
                 return
 
+        # Playlist-Namen absolut sicher machen (keine Sonderzeichen, die Windows blockiert)
         pl_name = re.sub(r'[^a-zA-Z0-9_\- ]', "", pl_name).strip()
         if not pl_name: pl_name = "Meine_Playlist"
 
@@ -108,6 +111,12 @@ class BacofyApp(ctk.CTk):
             self.log("Analysiere YouTube-Link...")
             with yt_dlp.YoutubeDL({'extract_flat': True, 'quiet': True, 'ignoreerrors': True}) as ydl:
                 info = ydl.extract_info(url, download=False)
+                
+                # --- NEUE SICHERHEIT: Prüfen ob YouTube "Nichts" geantwortet hat ---
+                if info is None:
+                    raise Exception("Die Playlist ist unsichtbar! Ist sie auf 'Privat' gestellt oder ein Auto-Mix?")
+                # -------------------------------------------------------------------
+                
                 if mode == "single":
                     entries = [info]
                 else:
