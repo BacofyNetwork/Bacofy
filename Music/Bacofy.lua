@@ -1,18 +1,17 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (Cyber-Red Edition)
--- FINAL VERSION: AUTO-MONITOR & PROGRESS BAR
+-- PROGRAM: BACOFY 
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
-local monitor = peripheral.find("monitor") -- Sucht nach Monitoren
+local monitor = peripheral.find("monitor") 
 local baseURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/"
 local masterURL = baseURL .. "master.txt"
 
 -- MONITOR LOGIC
-local display = term -- Standardmäßig der Computer-Screen
+local display = term 
 if monitor then
     display = monitor
-    display.setTextScale(0.5) -- Kleinere Schrift für mehr Platz auf Monitoren
+    display.setTextScale(0.5) 
 end
 
 -- STATE VARIABLES
@@ -71,7 +70,7 @@ local function loadPlaylist(name)
 end
 
 -- ==========================================
--- UI DRAW ENGINE (Cyber-Red Aesthetic)
+-- UI DRAW ENGINE 
 -- ==========================================
 local function drawUI()
     display.setBackgroundColor(colors.black)
@@ -90,7 +89,7 @@ local function drawUI()
     display.setBackgroundColor(cHead)
     display.setTextColor(cHeadText)
     display.clearLine()
-    display.write(" BACOFY PRO 2.0")
+    display.write(" Bacofy ")
     
     local timeStr = textutils.formatTime(os.time(), true)
     display.setCursorPos(w - #timeStr, 1)
