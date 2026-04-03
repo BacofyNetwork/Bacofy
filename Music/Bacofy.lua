@@ -15,7 +15,8 @@ local selectedPlaylist = ""
 local searchQuery = ""
 local vol = 0.5
 local isPlaying = false
-local forceSkip = false -- NEU: Echte Skip-Logik
+local isPaused = false -- NEU: Echte Pause-Logik
+local forceSkip = false 
 
 -- AUDIO TRACKING
 local allSongs = {} 
@@ -156,7 +157,8 @@ local function drawUI()
 
     term.setCursorPos(1, h - 2)
     term.clearLine()
-    local playIcon = isPlaying and "||" or "> "
+    -- Zeigt "||" an wenn es spielt, ">" wenn es pausiert oder gestoppt ist
+    local playIcon = (isPlaying and not isPaused) and "||" or "> "
     term.setCursorPos(cx - 9, h - 2)
     term.setTextColor(cButtonAccent)
     term.write("<<")
@@ -203,14 +205,18 @@ local function drawUI()
     
     if isPlaying then
         local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "Unknown"
-        term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
+        if isPaused then
+            term.write(" PAUSED:  " .. string.sub(currentName, 1, w - 11))
+        else
+            term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
+        end
     else
         term.write(" STOPPED")
     end
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE (ÜBERARBEITET)
+-- AUDIO STREAMING ENGINE (MIT ECHTER PAUSE)
 -- ==========================================
 local function playSong(url)
     if not speaker then return end
@@ -227,37 +233,57 @@ local function playSong(url)
     drawUI()
     
     local eof = false
+    local pendingBuffer = nil -- Speichert den Schnipsel beim Pausieren
     
     while isPlaying and not forceSkip do
-        local chunk = res.read(16384) 
-        if chunk == nil or chunk == "" then 
-            eof = true
-            break 
-        end
-        
-        local buffer = {}
-        if type(chunk) == "string" then
-            for i = 1, #chunk do
-                local val = string.byte(chunk, i)
-                if val > 127 then val = val - 256 end
-                table.insert(buffer, val)
+        if isPaused then
+            -- Wenn pausiert, warte einfach auf ein neues Event (wie unpause)
+            os.pullEvent()
+        else
+            local buffer = pendingBuffer
+            if not buffer then
+                local chunk = res.read(16384) 
+                if chunk == nil or chunk == "" then 
+                    eof = true
+                    break 
+                end
+                
+                buffer = {}
+                if type(chunk) == "string" then
+                    for i = 1, #chunk do
+                        local val = string.byte(chunk, i)
+                        if val > 127 then val = val - 256 end
+                        table.insert(buffer, val)
+                    end
+                elseif type(chunk) == "number" then
+                    local val = chunk
+                    if val > 127 then val = val - 256 end
+                    table.insert(buffer, val)
+                    for i = 2, 4096 do
+                        local b = res.read()
+                        if not b then break end
+                        if b > 127 then b = b - 256 end
+                        table.insert(buffer, b)
+                    end
+                end
             end
-        elseif type(chunk) == "number" then
-            local val = chunk
-            if val > 127 then val = val - 256 end
-            table.insert(buffer, val)
-            for i = 2, 4096 do
-                local b = res.read()
-                if not b then break end
-                if b > 127 then b = b - 256 end
-                table.insert(buffer, b)
+            
+            local queued = false
+            while isPlaying and not forceSkip and not isPaused and not queued do
+                if speaker.playAudio(buffer, vol) then
+                    queued = true
+                    pendingBuffer = nil
+                else
+                    -- Warte darauf, dass der Speaker Platz hat ODER ein Button gedrückt wurde
+                    os.pullEvent()
+                end
+            end
+            
+            -- Falls wir wegen Pause/Stop abgebrochen haben, heb den Buffer auf!
+            if not queued then
+                pendingBuffer = buffer
             end
         end
-        
-        while isPlaying and not forceSkip and not speaker.playAudio(buffer, vol) do
-            os.pullEvent("speaker_audio_empty")
-        end
-        os.sleep(0)
     end
     res.close()
     
@@ -340,11 +366,9 @@ parallel.waitForAny(
                                 end
                             end
                             playedPlaylistName = selectedPlaylist 
-                            if isPlaying then
-                                forceSkip = true
-                            else
-                                isPlaying = true
-                            end
+                            isPaused = false
+                            if isPlaying then forceSkip = true else isPlaying = true end
+                            os.queueEvent("audio_update") -- Weckt die Audio-Engine
                             drawUI()
                         end
                     end
@@ -354,22 +378,34 @@ parallel.waitForAny(
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
+                            isPaused = false
                             if isPlaying then forceSkip = true else isPlaying = true end
+                            os.queueEvent("audio_update")
                             drawUI()
                         end
                     elseif x >= cx - 4 and x <= cx then        -- [> / ||] Play/Pause
                         if #allSongs > 0 then
-                            isPlaying = not isPlaying
+                            if not isPlaying then
+                                isPlaying = true
+                                isPaused = false
+                            else
+                                isPaused = not isPaused
+                            end
+                            os.queueEvent("audio_update")
                             drawUI() 
                         end
                     elseif x >= cx + 3 and x <= cx + 7 then    -- [[]] Stop
                         isPlaying = false
+                        isPaused = false
+                        os.queueEvent("audio_update")
                         drawUI()
                     elseif x >= cx + 10 and x <= cx + 14 then  -- [>>] Next
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
+                            isPaused = false
                             if isPlaying then forceSkip = true else isPlaying = true end
+                            os.queueEvent("audio_update")
                             drawUI()
                         end
                     end
@@ -393,17 +429,16 @@ parallel.waitForAny(
             end
         end
     end,
-    -- Audio Polling Thread (NEU & STABIL)
     function()
         while true do
             if isPlaying and #allSongs > 0 and allSongs[currentIdx] then
+                -- playSong blockiert hier, bis das Lied zu Ende ist, gestoppt oder geskippt wird.
                 playSong(allSongs[currentIdx].url)
             else
                 os.sleep(0.1)
             end
         end
     end,
-    -- Auto-Scan
     function()
         while true do
             os.sleep(30)
