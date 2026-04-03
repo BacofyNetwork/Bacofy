@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (English & Clean UI)
+-- PROGRAM: BACOFY PRO (KAMI-RADIO VIBE)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -16,14 +16,17 @@ local searchQuery = ""
 local vol = 0.5
 local isPlaying = false
 
--- AUDIO TRACKING STATE
+-- AUDIO TRACKING
 local allSongs = {} 
 local currentIdx = 1 
 local playedPlaylistName = "" 
 
+-- SCROLLING
+local scrollOffset = 0
+
 local w, h = term.getSize()
 
--- Helper: Get List from URL (Text)
+-- Helper: Get List
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
@@ -33,7 +36,7 @@ local function getList(url)
     return t
 end
 
--- Helper: Load Playlist Songs
+-- Helper: Load Playlist
 local function loadPlaylist(name)
     local url = baseURL .. name .. ".txt"
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
@@ -49,132 +52,148 @@ local function loadPlaylist(name)
 end
 
 -- ==========================================
--- UI DRAW ENGINE
+-- UI DRAW ENGINE (KAMI AESTHETIC)
 -- ==========================================
 local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
+    -- COLORS FOR KAMI VIBE
+    local cHead = colors.magenta
+    local cListBg = colors.gray
+    local cHighlight = colors.pink
+
     -- ==========================================
-    -- ZONE 1: HEADER (Line 1 & 2)
+    -- HEADER (Line 1)
     -- ==========================================
     term.setCursorPos(1, 1)
+    term.setBackgroundColor(cHead)
+    term.setTextColor(colors.white)
+    term.clearLine()
+    term.write(" BACOFY PRO 2.0")
+    
+    -- Ingame Time (Top Right)
+    local timeStr = textutils.formatTime(os.time(), true)
+    term.setCursorPos(w - #timeStr, 1)
+    term.write(timeStr)
+    
+    -- ==========================================
+    -- SUBHEADER / SEARCH (Line 2)
+    -- ==========================================
+    term.setCursorPos(1, 2)
     term.setBackgroundColor(colors.black)
+    term.setTextColor(colors.white)
     term.clearLine()
     
     if view == "MASTER" then
-        term.setTextColor(colors.white)
-        term.write(" Bacofy Pro")
-        
-        term.setCursorPos(w - 7, 1)
-        term.setTextColor(colors.cyan)
-        term.write("[R] REF")
+        term.write(" Playlist Selection")
+        term.setCursorPos(w - 6, 2)
+        term.setTextColor(colors.lightGray)
+        term.write("[REF]")
     elseif view == "PLAYLIST" then
-        term.setTextColor(colors.cyan)
-        term.write(" [< BACK]")
-        
-        -- Fixed Overlap: Limit playlist name length
-        term.setCursorPos(11, 1)
-        term.setTextColor(colors.yellow)
-        term.write("PL: " .. string.sub(selectedPlaylist, 1, w - 20))
-
-        term.setCursorPos(w - 7, 1)
-        term.setTextColor(colors.cyan)
-        term.write("[R] REF")
+        term.write(" (<-) " .. string.sub(selectedPlaylist, 1, 15))
+        term.setCursorPos(w - 18, 2)
+        term.setTextColor(colors.lightGray)
+        term.write("Q: ")
+        term.setTextColor(colors.white)
+        term.write(string.sub(searchQuery .. "_", 1, 15))
     end
     
-    -- Search Bar
-    term.setCursorPos(1, 2)
-    term.setBackgroundColor(colors.black)
-    term.clearLine()
-    term.setTextColor(colors.lightGray)
-    term.write(" Search: ")
-    term.setTextColor(colors.white)
-    term.write(searchQuery .. "_")
+    -- ==========================================
+    -- LIST AREA (Line 3 to h-3)
+    -- ==========================================
+    local listStartY = 3
+    local listEndY = h - 3
+    local maxDisplay = listEndY - listStartY + 1
     
-    -- ==========================================
-    -- ZONE 2: TOP SEPARATOR (Line 3)
-    -- ==========================================
-    term.setCursorPos(1, 3)
-    term.setBackgroundColor(colors.gray) -- Dark gray bar
-    term.clearLine()
-
-    -- ==========================================
-    -- ZONE 3: LIST AREA (Line 4 to h-3)
-    -- ==========================================
-    local listStart = 4
-    local listEnd = h - 3
-    
-    for y = listStart, listEnd do
+    -- Fill List Background
+    for y = listStartY, listEndY do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(colors.lime) 
+        term.setBackgroundColor(cListBg)
         term.clearLine()
     end
     
-    if view == "MASTER" then
-        for i, item in ipairs(playlists) do
-            if i > (listEnd - listStart + 1) then break end
-            term.setCursorPos(2, (listStart - 1) + i)
-            
-            term.setBackgroundColor(colors.cyan) 
-            term.setTextColor(colors.white)
-            term.write(" [ Playlist: " .. string.sub(item, 1, w - 16) .. " ] ")
-        end
+    local listToDraw = (view == "MASTER") and playlists or filteredSongs
+    
+    -- Clamp Scroll Offset
+    if scrollOffset > #listToDraw - maxDisplay then
+        scrollOffset = math.max(0, #listToDraw - maxDisplay)
+    end
+    if scrollOffset < 0 then scrollOffset = 0 end
+    
+    -- Draw Items
+    for i = 1, maxDisplay do
+        local idx = i + scrollOffset
+        local item = listToDraw[idx]
         
-    elseif view == "PLAYLIST" then
-        for i, item in ipairs(filteredSongs) do
-            if i > (listEnd - listStart + 1) then break end
-            term.setCursorPos(2, (listStart - 1) + i)
+        if item then
+            term.setCursorPos(1, listStartY + i - 1)
+            local isActive = false
+            local displayText = ""
             
-            local isCurrentSong = false
-            if isPlaying and allSongs[currentIdx] and playedPlaylistName == selectedPlaylist then
-                if item.url == allSongs[currentIdx].url then
-                    isCurrentSong = true
+            if view == "MASTER" then
+                displayText = "  " .. item
+            else
+                displayText = "  " .. item.name
+                if isPlaying and allSongs[currentIdx] and playedPlaylistName == selectedPlaylist then
+                    if item.url == allSongs[currentIdx].url then isActive = true end
                 end
             end
             
-            if isCurrentSong then
-                term.setBackgroundColor(colors.yellow) 
-                term.setTextColor(colors.black)
-                term.write(" [ > " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
-            else
-                term.setBackgroundColor(colors.cyan) 
+            if isActive then
+                term.setBackgroundColor(cHighlight)
                 term.setTextColor(colors.white)
-                term.write(" [   " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
+            else
+                term.setBackgroundColor(cListBg)
+                term.setTextColor(colors.white)
             end
+            
+            term.clearLine()
+            term.write(string.sub(displayText, 1, w))
         end
     end
 
     -- ==========================================
-    -- ZONE 4: BOTTOM SEPARATOR (Line h-2)
+    -- CONTROLS AREA (Line h-2 and h-1)
     -- ==========================================
+    term.setBackgroundColor(colors.black)
+    term.setTextColor(colors.white)
+    
+    -- Main Controls (h-2)
     term.setCursorPos(1, h - 2)
-    term.setBackgroundColor(colors.gray) -- Dark gray bar
     term.clearLine()
-
-    -- ==========================================
-    -- ZONE 5: CONTROLS (Line h-1 to h)
-    -- ==========================================
-    local textColorsOnRed = colors.white
-    local textColorsOnRedButtons = colors.lightGray 
-
-    -- Buttons Line (h-1)
+    local playIcon = isPlaying and "||" or "> "
+    term.write("    <<       " .. playIcon .. "       []       >>")
+    
+    -- Volume Controls (h-1)
     term.setCursorPos(1, h - 1)
-    term.setBackgroundColor(colors.red) 
-    term.setTextColor(textColorsOnRedButtons) 
     term.clearLine()
+    local volStr = tostring(math.floor(vol * 100))
+    if #volStr == 1 then volStr = "0" .. volStr end
     
-    local pIcon = isPlaying and "[||]" or "[ >]"
-    term.write("  [ - ]   [|<]     " .. pIcon .. "     [>|]   [ + ]")
+    term.setTextColor(colors.lightGray)
+    term.write("    --       x        -        ")
+    term.setBackgroundColor(colors.gray)
+    term.setTextColor(colors.white)
+    term.write(volStr)
+    term.setBackgroundColor(colors.black)
+    term.setTextColor(colors.lightGray)
+    term.write("        +")
 
-    -- Info Line (h)
+    -- ==========================================
+    -- STATUS FOOTER (Line h)
+    -- ==========================================
     term.setCursorPos(1, h)
-    term.setBackgroundColor(colors.red) 
-    term.setTextColor(textColorsOnRed) 
+    term.setBackgroundColor(cHead)
+    term.setTextColor(colors.white)
     term.clearLine()
     
-    local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "IDLE"
-    term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
+    if isPlaying then
+        local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "Unknown"
+        term.write(" Playing: " .. string.sub(currentName, 1, w - 11))
+    else
+        term.write(" Stopped")
+    end
 end
 
 -- ==========================================
@@ -240,54 +259,62 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- Search Input
-            if event == "char" and view == "PLAYLIST" then
+            -- SCROLLING MOUSE WHEEL
+            if event == "mouse_scroll" then
+                scrollOffset = scrollOffset + p1
+                drawUI()
+                
+            -- SEARCH (Typing)
+            elseif event == "char" and view == "PLAYLIST" then
                 searchQuery = searchQuery .. p1
+                scrollOffset = 0
                 filteredSongs = {}
                 for _, s in ipairs(currentSongs) do 
                     if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                 end
                 drawUI()
             
-            -- Backspace (Delete)
+            -- DELETE (Backspace)
             elseif event == "key" and p1 == keys.backspace and view == "PLAYLIST" and #searchQuery > 0 then
                 searchQuery = searchQuery:sub(1, -2)
+                scrollOffset = 0
                 filteredSongs = {}
                 for _, s in ipairs(currentSongs) do 
                     if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                 end
                 drawUI()
                 
-            -- Mouse Clicks
+            -- MOUSE CLICKS
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
-                -- HEADER ZONE
-                if y == 1 then
-                    if x > w - 8 then
-                        -- Refresh Button
-                        playlists = getList(masterURL)
-                    elseif x <= 9 and view == "PLAYLIST" then
-                        -- Back Button
-                        view = "MASTER"
+                -- HEADER ZONE (Line 2)
+                if y == 2 then
+                    if view == "MASTER" and x > w - 6 then
+                        playlists = getList(masterURL) -- REFRESH
+                    elseif view == "PLAYLIST" and x <= 6 then
+                        view = "MASTER" -- BACK BUTTON (<-)
+                        scrollOffset = 0
                     end
                 
-                -- LIST ZONE (Line 4 to h-3)
-                elseif y >= 4 and y <= h - 3 then
-                    local idx = y - 3
+                -- LIST ZONE (Line 3 to h-3)
+                elseif y >= 3 and y <= h - 3 then
+                    local displayIdx = y - 2
+                    local actualIdx = displayIdx + scrollOffset
                     
                     if view == "MASTER" then
-                        if playlists[idx] then
-                            selectedPlaylist = playlists[idx]
+                        if playlists[actualIdx] then
+                            selectedPlaylist = playlists[actualIdx]
                             currentSongs = loadPlaylist(selectedPlaylist)
                             filteredSongs = currentSongs
                             searchQuery = "" 
+                            scrollOffset = 0
                             view = "PLAYLIST"
                         end
                     elseif view == "PLAYLIST" then
-                        if filteredSongs[idx] then
+                        if filteredSongs[actualIdx] then
                             for i, s in ipairs(currentSongs) do
-                                if s.url == filteredSongs[idx].url then
+                                if s.url == filteredSongs[actualIdx].url then
                                     currentIdx = i
                                     allSongs = currentSongs 
                                     break
@@ -299,37 +326,46 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- CONTROLS ZONE (Line h-1)
-                elseif y == h - 1 then
-                    if x >= 1 and x <= 7 then           -- VOL DOWN [-]
-                        vol = vol - 0.1
-                        if vol < 0.1 then vol = 1.0 end
-                        
-                    elseif x >= 8 and x <= 14 then      -- PREVIOUS [|<]
+                -- MEDIA CONTROLS (Line h-2)
+                elseif y == h - 2 then
+                    if x >= 3 and x <= 7 then           -- PREV [<<]
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                        
-                    elseif x >= 16 and x <= 26 then     -- PLAY/PAUSE [||]
+                    elseif x >= 12 and x <= 16 then     -- PLAY/PAUSE [> / ||]
                         isPlaying = not isPlaying
                         if isPlaying and #allSongs > 0 then
                             os.queueEvent("start_music")
+                        else
+                            drawUI() -- Update Status zu "Stopped"
                         end
-                        
-                    elseif x >= 28 and x <= 34 then     -- NEXT [>|]
+                    elseif x >= 21 and x <= 24 then     -- STOP []
+                        isPlaying = false
+                        drawUI()
+                    elseif x >= 29 and x <= 33 then     -- NEXT [>>]
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                        
-                    elseif x >= 36 and x <= 42 then     -- VOL UP [+]
+                    end
+                    
+                -- VOLUME CONTROLS (Line h-1)
+                elseif y == h - 1 then
+                    if x >= 3 and x <= 6 then           -- VOL MIN [--]
+                        vol = 0.1
+                    elseif x >= 12 and x <= 14 then     -- MUTE [x]
+                        vol = 0.0
+                    elseif x >= 20 and x <= 23 then     -- VOL DOWN [-]
+                        vol = vol - 0.1
+                        if vol < 0.0 then vol = 0.0 end
+                    elseif x >= 37 and x <= 40 then     -- VOL UP [+]
                         vol = vol + 0.1
-                        if vol > 1.0 then vol = 0.1 end
+                        if vol > 1.0 then vol = 1.0 end
                     end
                 end
                 drawUI()
@@ -344,24 +380,8 @@ parallel.waitForAny(
     end,
     function()
         while true do
-            os.sleep(30)
-            if view == "MASTER" then
-                local newList = getList(masterURL)
-                if #newList > #playlists then
-                    playlists = newList
-                    drawUI()
-                end
-            elseif view == "PLAYLIST" then
-                local newList = loadPlaylist(selectedPlaylist)
-                if #newList > #currentSongs then
-                    currentSongs = newList
-                    filteredSongs = {}
-                    for _, s in ipairs(currentSongs) do 
-                        if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
-                    end
-                    drawUI()
-                end
-            end
+            os.sleep(30) -- Auto Update Background
+            -- UI draw update
         end
     end
 )
