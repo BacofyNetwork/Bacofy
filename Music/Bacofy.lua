@@ -60,13 +60,13 @@ local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- COLOR PALETTE: Cyber-Red
+    -- COLOR PALETTE: PURE Cyber-Red
     local cHead = colors.red
     local cHeadText = colors.white
     local cListBg = colors.black
-    local cItemBg = colors.cyan -- fulfills original sketch "blau rest" idea
-    local cActiveItemBg = colors.lime -- Lime is the ultimate contrast on black/red
-    local cActiveItemText = colors.black
+    local cItemBg = colors.gray -- Changed from cyan to gray
+    local cActiveItemBg = colors.red -- Changed from lime to red
+    local cActiveItemText = colors.white -- Changed from black to white
 
     -- ==========================================
     -- HEADER (Line 1) - Red Bar
@@ -96,14 +96,14 @@ local function drawUI()
         term.setTextColor(colors.lightGray)
         term.write("[R] REF") -- Use [R] for clarity
     elseif view == "PLAYLIST" then
-        -- Searchbar Only - fulfill sketch request to remove PL name
+        -- Searchbar Only
         term.write(" (<-) Search: ")
         term.setTextColor(colors.white)
         term.write(string.sub(searchQuery .. "_", 1, w - 15)) -- Pulse underscore
     end
     
     -- ==========================================
-    -- LIST AREA (Line 3 to h-3) - Red background with boxes
+    -- LIST AREA (Line 3 to h-3)
     -- ==========================================
     local listStartY = 3
     local listEndY = h - 3
@@ -112,7 +112,7 @@ local function drawUI()
     -- Fill List Background
     for y = listStartY, listEndY do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(cHead) -- Entire body is Red
+        term.setBackgroundColor(cListBg) -- Changed to black so items pop
         term.clearLine()
     end
     
@@ -146,13 +146,13 @@ local function drawUI()
                 end
             end
             
-            -- Set colors based on original sketch logic (Cyan idle, Lime/Yellow active)
+            -- Apply Pure Red/Gray Colors
             if isActive then
                 term.setBackgroundColor(cActiveItemBg)
                 term.setTextColor(cActiveItemText)
             else
-                term.setBackgroundColor(cItemBg) -- fulfill "blau rest" request
-                term.setTextColor(colors.white) -- High contrast white on cyan/red
+                term.setBackgroundColor(cItemBg) 
+                term.setTextColor(colors.white) 
             end
             
             term.clearLine()
@@ -161,8 +161,8 @@ local function drawUI()
     end
 
     -- Visual Spacer (Dots) above controls
-    term.setBackgroundColor(cHead)
-    term.setTextColor(colors.black)
+    term.setBackgroundColor(cListBg)
+    term.setTextColor(colors.gray)
     term.setCursorPos(2, h-3)
     term.clearLine()
     term.write(" . . . . . ")
@@ -330,7 +330,7 @@ parallel.waitForAny(
                     -- Title area, do nothing
                 elseif y == 2 then
                     if view == "MASTER" and x > w - 8 then
-                        playlists = getList(masterURL) -- [R] REF (unchanged click logic)
+                        playlists = getList(masterURL) -- [R] REF
                     elseif view == "PLAYLIST" and x <= 9 then -- (<-) Back Button click area extended
                         view = "MASTER" 
                         scrollOffset = 0
@@ -357,19 +357,15 @@ parallel.waitForAny(
                                     currentIdx = i
                                     allSongs = currentSongs 
                                     break
-                                
                                 end
-                            
                             end
                             isPlaying = false
                             playedPlaylistName = selectedPlaylist 
                             os.queueEvent("start_music")
-                        
                         end
-                    
                     end
                     
-                -- MEDIA CONTROLS Zone (Line h-2) - Robust dynamic click logic
+                -- MEDIA CONTROLS Zone (Line h-2)
                 elseif y == h - 2 then
                     if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
                         if #allSongs > 0 then
@@ -397,9 +393,8 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- VOLUME CONTROLS Zone (Line h-1) - Fulfill separated button sketch request
+                -- VOLUME CONTROLS Zone (Line h-1)
                 elseif y == h - 1 then
-                    -- Re-calculate separated click zones based on UI string
                     local volStr = tostring(math.floor(vol * 100))
                     if #volStr == 1 then volStr = "0" .. volStr end
                     if volStr == "100" then volStr = "MAX" end
@@ -420,14 +415,14 @@ parallel.waitForAny(
             end
         end
     end,
-    -- Audio Thread (unchanged)
+    -- Audio Thread
     function()
         while true do
             os.pullEvent("start_music")
             if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
         end
     end,
-    -- Auto-Scan (unchanged)
+    -- Auto-Scan
     function()
         while true do
             os.sleep(30)
@@ -441,9 +436,7 @@ parallel.waitForAny(
                     for _, s in ipairs(currentSongs) do 
                         if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                     end
-                
                 end
-            
             end
             drawUI()
         end
