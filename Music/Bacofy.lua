@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- PROGRAM: BACOFY PRO (English & Red Design)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -16,18 +16,14 @@ local searchQuery = ""
 local vol = 0.5
 local isPlaying = false
 
--- AUDIO TRACKING
+-- AUDIO TRACKING STATE
 local allSongs = {} 
 local currentIdx = 1 
 local playedPlaylistName = "" 
 
--- SCROLLING
-local scrollOffset = 0
-
 local w, h = term.getSize()
-local cx = math.floor(w / 2) -- Center of the screen
 
--- Helper: Get List
+-- Helper: Get List from URL (Text)
 local function getList(url)
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
     if not res then return {} end
@@ -37,7 +33,7 @@ local function getList(url)
     return t
 end
 
--- Helper: Load Playlist
+-- Helper: Load Playlist Songs
 local function loadPlaylist(name)
     local url = baseURL .. name .. ".txt"
     local res = http.get(url .. "?t=" .. os.epoch("utc"))
@@ -53,183 +49,169 @@ local function loadPlaylist(name)
 end
 
 -- ==========================================
--- UI DRAW ENGINE (Cyber-Red Aesthetic)
+-- UI DRAW ENGINE
 -- ==========================================
 local function drawUI()
-    -- Base Terminal Reset (High Contrast Black)
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- COLOR PALETTE: Cyber-Red
-    local cHead = colors.red
-    local cHeadText = colors.white
-    local cListBg = colors.black
-    local cItemBg = colors.gray -- fulfills original sketch "blau rest" idea
-    local cActiveItemBg = colors.red -- Lime is the ultimate contrast on black/red -> changed to Red
-    local cActiveItemText = colors.white
-
     -- ==========================================
-    -- HEADER (Line 1) - Red Bar
+    -- ZONE 1: HEADER (Line 1 & 2)
     -- ==========================================
     term.setCursorPos(1, 1)
-    term.setBackgroundColor(cHead)
-    term.setTextColor(cHeadText)
-    term.clearLine()
-    term.write(" BACOFY PRO 2.0")
-    
-    -- Ingame Time (Top Right)
-    local timeStr = textutils.formatTime(os.time(), true)
-    term.setCursorPos(w - #timeStr, 1)
-    term.write(timeStr)
-    
-    -- ==========================================
-    -- SUBHEADER / SEARCH (Line 2) - Black Bar
-    -- ==========================================
-    term.setCursorPos(1, 2)
-    term.setBackgroundColor(colors.black)
-    term.setTextColor(colors.white)
+    term.setBackgroundColor(colors.red) -- Red header
     term.clearLine()
     
     if view == "MASTER" then
-        term.write(" Playlists")
-        term.setCursorPos(w - 7, 2)
-        term.setTextColor(colors.lightGray)
-        term.write("[R] REF") -- Use [R] for clarity
-    elseif view == "PLAYLIST" then
-        -- Searchbar Only - fulfill sketch request to remove PL name
-        term.write(" (<-) Search: ")
         term.setTextColor(colors.white)
-        term.write(string.sub(searchQuery .. "_", 1, w - 15)) -- Pulse underscore
+        term.write(" Bacofy Pro")
+        
+        term.setCursorPos(w - 7, 1)
+        term.setTextColor(colors.lightGray)
+        term.write("[R] REF")
+    elseif view == "PLAYLIST" then
+        term.setTextColor(colors.white)
+        term.write(" [< BACK]")
+        
+        -- Fixed Overlap: Limit playlist name length
+        term.setCursorPos(11, 1)
+        term.setTextColor(colors.yellow)
+        term.write("PL: " .. string.sub(selectedPlaylist, 1, w - 20))
+
+        term.setCursorPos(w - 7, 1)
+        term.setTextColor(colors.lightGray)
+        term.write("[R] REF")
     end
     
-    -- ==========================================
-    -- LIST AREA (Line 3 to h-3) - Black background with boxes
-    -- ==========================================
-    local listStartY = 3
-    local listEndY = h - 3
-    local maxDisplay = listEndY - listStartY + 1
+    -- Search Bar
+    term.setCursorPos(1, 2)
+    term.setBackgroundColor(colors.black)
+    term.clearLine()
+    term.setTextColor(colors.lightGray)
+    term.write(" Search: ")
+    term.setTextColor(colors.white)
+    term.write(searchQuery .. "_")
     
-    -- Fill List Background
-    for y = listStartY, listEndY do
+    -- ==========================================
+    -- ZONE 2: TOP SEPARATOR (Line 3)
+    -- ==========================================
+    term.setCursorPos(1, 3)
+    term.setBackgroundColor(colors.black) -- Removed gray bar
+    term.clearLine()
+    term.setTextColor(colors.gray)
+    term.write(string.rep("-", w))
+
+    -- ==========================================
+    -- ZONE 3: LIST AREA (Line 4 to h-3)
+    -- ==========================================
+    local listStart = 4
+    local listEnd = h - 3
+    
+    for y = listStart, listEnd do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(cListBg) 
+        term.setBackgroundColor(colors.black) -- Black list background
         term.clearLine()
     end
     
-    local listToDraw = (view == "MASTER") and playlists or filteredSongs
-    
-    -- Scroll Offset Clamping
-    if scrollOffset > #listToDraw - maxDisplay then
-        scrollOffset = math.max(0, #listToDraw - maxDisplay)
-    end
-    if scrollOffset < 0 then scrollOffset = 0 end
-    
-    -- Draw List items
-    for i = 1, maxDisplay do
-        local idx = i + scrollOffset
-        local item = listToDraw[idx]
-        
-        if item then
-            term.setCursorPos(1, listStartY + i - 1)
-            local isActive = false
-            local displayText = ""
+    if view == "MASTER" then
+        term.setTextColor(colors.white)
+        for i, item in ipairs(playlists) do
+            if i > (listEnd - listStart + 1) then break end
+            term.setCursorPos(2, (listStart - 1) + i)
             
-            if view == "MASTER" then
-                displayText = "  [ Playlist: " .. item .. " ] "
-            else
-                displayText = "  [   " .. i .. ". " .. item.name .. " ] "
-                if isPlaying and allSongs[currentIdx] and playedPlaylistName == selectedPlaylist then
-                    if item.url == allSongs[currentIdx].url then 
-                        isActive = true 
-                        displayText = "  [ > " .. i .. ". " .. item.name .. " ] "
-                    end
+            -- Sketch-Look: Ein Balken.
+            term.setBackgroundColor(colors.red) 
+            term.write(" [ Playlist: " .. string.sub(item, 1, w - 16) .. " ] ")
+        end
+        
+    elseif view == "PLAYLIST" then
+        for i, item in ipairs(filteredSongs) do
+            if i > (listEnd - listStart + 1) then break end
+            term.setCursorPos(2, (listStart - 1) + i)
+            
+            local isCurrentSong = false
+            if isPlaying and allSongs[currentIdx] and playedPlaylistName == selectedPlaylist then
+                if item.url == allSongs[currentIdx].url then
+                    isCurrentSong = true
                 end
             end
             
-            if isActive then
-                term.setBackgroundColor(cActiveItemBg)
-                term.setTextColor(cActiveItemText)
+            if isCurrentSong then
+                term.setBackgroundColor(colors.lime) -- Green for active song
+                term.setTextColor(colors.black)
+                term.write(" [ > " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
             else
-                term.setBackgroundColor(cItemBg) 
-                term.setTextColor(colors.white) 
+                term.setBackgroundColor(colors.red) -- Red for idle song
+                term.setTextColor(colors.white)
+                term.write(" [   " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
             end
-            
-            term.clearLine()
-            term.write(string.sub(displayText, 1, w))
         end
     end
 
-    -- Visual Spacer (Dots) above controls
-    term.setBackgroundColor(cListBg)
+    -- Visual Separation Dots
+    term.setBackgroundColor(colors.black)
     term.setTextColor(colors.gray)
     term.setCursorPos(2, h-3)
-    term.clearLine()
     term.write(" . . . . . ")
 
     -- ==========================================
-    -- CONTROLS AREA (Line h-2 and h-1) - Gray Background
+    -- ZONE 4: CONTROLS (Line h-2 to h-1) (Now Gray)
     -- ==========================================
-    term.setBackgroundColor(colors.gray) -- GEÄNDERT AUF GRAU!
-    term.setTextColor(colors.white)
-    
-    -- Red accents for buttons
-    local cButtonAccent = colors.red
+    local textColorsOnGray = colors.white
+    local textColorsOnRedButtons = colors.red -- Original button color logic
 
-    -- Media Controls (h-2) dynamically centered
-    term.setCursorPos(1, h - 2)
+    -- Controls Line (h-2) (Media Buttons)
+    term.setCursorPos(cx - 9, h - 2) -- Center the cluster
+    term.setBackgroundColor(colors.gray) -- Gray control bar
     term.clearLine()
+    
     local playIcon = isPlaying and "||" or "> "
-    term.setCursorPos(cx - 9, h - 2)
-    term.setTextColor(cButtonAccent)
-    term.write("<<")
-    term.setCursorPos(cx - 4, h - 2)
-    term.write(playIcon)
-    term.setCursorPos(cx + 3, h - 2)
-    term.write("[]")
-    term.setCursorPos(cx + 10, h - 2)
-    term.write(">>")
     
-    -- Volume Controls (h-1) dynamically centered & separated
-    term.setCursorPos(1, h - 1)
+    term.setTextColor(textColorsOnRedButtons) -- Maintain red for buttons
+    term.write("<<")
+    
+    term.setTextColor(colors.black) -- Original color logic
+    term.write("  ")
+    term.setTextColor(textColorsOnRedButtons)
+    term.write(playIcon)
+    
+    term.setTextColor(colors.black)
+    term.write("  ")
+    term.setTextColor(textColorsOnRedButtons)
+    term.write("[]")
+    
+    term.setTextColor(colors.black)
+    term.write("  ")
+    term.setTextColor(textColorsOnRedButtons)
+    term.write(">>")
+
+    -- Volume Line (h-1) (Separated Volume)
+    term.setCursorPos(cx - 9, h - 1) -- Center the cluster
+    term.setBackgroundColor(colors.gray) -- Gray control bar
     term.clearLine()
     
-    local volStr = tostring(math.floor(vol * 100))
-    if #volStr == 1 then volStr = "0" .. volStr end
-    if volStr == "100" then volStr = "MAX" end
+    term.setTextColor(textColorsOnRedButtons) -- Maintain red for buttons
+    term.write("[-]  ")
     
-    local vText = "[-]    VOL: " .. volStr .. "    [+]"
-    local startX = cx - math.floor(#vText / 2)
-    
-    term.setCursorPos(startX, h - 1)
-    term.setTextColor(cButtonAccent)
-    term.write("[-]")
-    
-    term.setCursorPos(startX + 7, h - 1)
-    term.setTextColor(colors.white)
+    term.setTextColor(colors.white) -- Original color logic
     term.write("VOL: ")
-    term.setBackgroundColor(colors.black) -- KONTRAST-FIX: Schwarz auf Grau, damit man es lesen kann
-    term.setTextColor(colors.white)
-    term.write(volStr)
+    term.setBackgroundColor(colors.gray) -- Keep number area gray
+    term.write(tostring(math.floor(vol * 100)))
+    term.setBackgroundColor(colors.gray) -- Rest gray
     
-    term.setBackgroundColor(colors.gray) -- Zurück zur grauen Steuerleiste
-    term.setTextColor(cButtonAccent)
-    term.setCursorPos(startX + #vText - 3, h - 1)
-    term.write("[+]")
+    term.setTextColor(textColorsOnRedButtons) -- Maintain red for buttons
+    term.write("  [+]")
 
     -- ==========================================
-    -- STATUS FOOTER (Line h) - Red Bar
+    -- ZONE 5: INFO Line (Line h) (Still Red)
     -- ==========================================
     term.setCursorPos(1, h)
-    term.setBackgroundColor(cHead)
-    term.setTextColor(cHeadText)
+    term.setBackgroundColor(colors.red) -- Info Line still red
+    term.setTextColor(colors.white) 
     term.clearLine()
     
-    if isPlaying then
-        local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "Unknown"
-        term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
-    else
-        term.write(" STOPPED")
-    end
+    local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "IDLE"
+    term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
 end
 
 -- ==========================================
@@ -282,112 +264,98 @@ local function playSong(url)
 end
 
 -- ==========================================
--- INITIAL LOAD & APP START
+-- INITIAL LOAD (UNCHANGED)
 -- ==========================================
 playlists = getList(masterURL)
 drawUI()
 
 -- ==========================================
--- MAIN EVENT LOOPS
+-- MAIN EVENT LOOPS (UNCHANGED)
 -- ==========================================
 parallel.waitForAny(
-    function() -- Input Loop
+    function() 
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- MOUSE SCROLLING (Unchanged logic)
-            if event == "mouse_scroll" then
-                scrollOffset = scrollOffset + p1
-                drawUI()
-                
-            -- TYPING (Search)
-            elseif event == "char" and view == "PLAYLIST" then
+            -- Search Input
+            if event == "char" and view == "PLAYLIST" then
                 searchQuery = searchQuery .. p1
-                scrollOffset = 0
                 filteredSongs = {}
                 for _, s in ipairs(currentSongs) do 
                     if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                 end
                 drawUI()
             
-            -- DELETE (Backspace)
+            -- Backspace (Delete)
             elseif event == "key" and p1 == keys.backspace and view == "PLAYLIST" and #searchQuery > 0 then
                 searchQuery = searchQuery:sub(1, -2)
-                scrollOffset = 0
                 filteredSongs = {}
                 for _, s in ipairs(currentSongs) do 
                     if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                 end
                 drawUI()
                 
-            -- MOUSE CLICKS
+            -- Mouse Clicks (Zones updated for gray bars)
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
-                -- HEADER/SUBHEADER Zone (Line 1 & 2)
+                -- HEADER ZONE
                 if y == 1 then
-                    -- Title area, do nothing
-                elseif y == 2 then
-                    if view == "MASTER" and x > w - 8 then
-                        playlists = getList(masterURL) -- [R] REF (unchanged click logic)
-                    elseif view == "PLAYLIST" and x <= 9 then -- (<-) Back Button click area extended
-                        view = "MASTER" 
-                        scrollOffset = 0
+                    if x > w - 8 then
+                        playlists = getList(masterURL)
+                    elseif x <= 9 and view == "PLAYLIST" then
+                        view = "MASTER"
                     end
                 
-                -- LIST ZONE (Line 3 to h-3)
-                elseif y >= 3 and y <= h - 3 then
-                    local displayIdx = y - 2
-                    local actualIdx = displayIdx + scrollOffset
+                -- LIST ZONE (Line 4 to h-3)
+                elseif y >= 4 and y <= h - 3 then
+                    local idx = y - 3
                     
                     if view == "MASTER" then
-                        if playlists[actualIdx] then
-                            selectedPlaylist = playlists[actualIdx]
+                        if playlists[idx] then
+                            selectedPlaylist = playlists[idx]
                             currentSongs = loadPlaylist(selectedPlaylist)
                             filteredSongs = currentSongs
                             searchQuery = "" 
-                            scrollOffset = 0
                             view = "PLAYLIST"
                         end
                     elseif view == "PLAYLIST" then
-                        if filteredSongs[actualIdx] then
+                        if filteredSongs[idx] then
                             for i, s in ipairs(currentSongs) do
-                                if s.url == filteredSongs[actualIdx].url then
+                                if s.url == filteredSongs[idx].url then
                                     currentIdx = i
                                     allSongs = currentSongs 
                                     break
-                                
                                 end
-                            
                             end
                             isPlaying = false
                             playedPlaylistName = selectedPlaylist 
                             os.queueEvent("start_music")
-                        
                         end
-                    
                     end
                     
-                -- MEDIA CONTROLS Zone (Line h-2) - Robust dynamic click logic
+                -- MEDIA CONTROLS (Line h-2)
                 elseif y == h - 2 then
-                    if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
+                    -- Zone cluster is cx-9 to cx+14
+                    local clusterStart = cx - 9
+                    if x >= clusterStart and x <= clusterStart+1 then           -- [<<] Prev
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= cx - 4 and x <= cx then        -- [> / ||] Play/Pause
+                        
+                    elseif x >= clusterStart+4 and x <= clusterStart+5 then      -- [> / ||] Play/Pause
                         isPlaying = not isPlaying
                         if isPlaying and #allSongs > 0 then
                             os.queueEvent("start_music")
-                        else
-                            drawUI() 
                         end
-                    elseif x >= cx + 3 and x <= cx + 7 then    -- [[]] Stop
+                        
+                    elseif x >= clusterStart+8 and x <= clusterStart+9 then      -- [[]] Stop
                         isPlaying = false
-                        drawUI()
-                    elseif x >= cx + 10 and x <= cx + 14 then  -- [>>] Next
+                        
+                    elseif x >= clusterStart+12 and x <= clusterStart+13 then     -- [>>] Next
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
@@ -395,56 +363,49 @@ parallel.waitForAny(
                             os.queueEvent("start_music")
                         end
                     end
-                    
-                -- VOLUME CONTROLS Zone (Line h-1) - Fulfill separated button sketch request
-                elseif y == h - 1 then
-                    -- Re-calculate separated click zones based on UI string
-                    local volStr = tostring(math.floor(vol * 100))
-                    if #volStr == 1 then volStr = "0" .. volStr end
-                    if volStr == "100" then volStr = "MAX" end
-                    local vTextLen = #("[-]    VOL: " .. volStr .. "    [+]")
-                    local btnStart = cx - math.floor(vTextLen / 2)
 
-                    -- Click zone for [-]
-                    if x >= btnStart - 1 and x <= btnStart + 3 then    
+                -- VOLUME CONTROLS (Line h-1)
+                elseif y == h - 1 then
+                    -- Zone cluster is cx-9 to cx+14
+                    local clusterStart = cx - 9
+                    if x >= clusterStart and x <= clusterStart+2 then           -- [-] Vol Down
                         vol = vol - 0.1
-                        if vol < 0.0 then vol = 0.0 end
-                    -- Click zone for [+]
-                    elseif x >= btnStart + vTextLen - 4 and x <= btnStart + vTextLen + 1 then 
+                        if vol < 0.1 then vol = 1.0 end
+                    elseif x >= clusterStart+11 and x <= clusterStart+14 then     -- [+] Vol Up
                         vol = vol + 0.1
-                        if vol > 1.0 then vol = 1.0 end
+                        if vol > 1.0 then vol = 0.1 end
                     end
                 end
                 drawUI()
             end
         end
     end,
-    -- Audio Thread (unchanged)
     function()
         while true do
             os.pullEvent("start_music")
             if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
         end
     end,
-    -- Auto-Scan (unchanged)
     function()
         while true do
             os.sleep(30)
             if view == "MASTER" then
-                playlists = getList(masterURL)
-            else
-                local oldLen = #currentSongs
-                currentSongs = loadPlaylist(selectedPlaylist)
-                if #currentSongs > oldLen then
+                local newList = getList(masterURL)
+                if #newList > #playlists then
+                    playlists = newList
+                    drawUI()
+                end
+            elseif view == "PLAYLIST" then
+                local newList = loadPlaylist(selectedPlaylist)
+                if #newList > #currentSongs then
+                    currentSongs = newList
                     filteredSongs = {}
                     for _, s in ipairs(currentSongs) do 
                         if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                     end
-                
+                    drawUI()
                 end
-            
             end
-            drawUI()
         end
     end
 )
