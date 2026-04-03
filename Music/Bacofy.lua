@@ -15,6 +15,7 @@ local selectedPlaylist = ""
 local searchQuery = ""
 local vol = 0.5
 local isPlaying = false
+local forceSkip = false -- NEU: Echte Skip-Logik
 
 -- AUDIO TRACKING
 local allSongs = {} 
@@ -25,7 +26,7 @@ local playedPlaylistName = ""
 local scrollOffset = 0
 
 local w, h = term.getSize()
-local cx = math.floor(w / 2) -- Center of the screen
+local cx = math.floor(w / 2) 
 
 -- Helper: Get List
 local function getList(url)
@@ -56,11 +57,9 @@ end
 -- UI DRAW ENGINE (Cyber-Red Aesthetic)
 -- ==========================================
 local function drawUI()
-    -- Base Terminal Reset (High Contrast Black)
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- COLOR PALETTE: Cyber-Red
     local cHead = colors.red
     local cHeadText = colors.white
     local cListBg = colors.black
@@ -69,23 +68,18 @@ local function drawUI()
     local cActiveItemText = colors.white
     local cControlBg = colors.gray 
 
-    -- ==========================================
-    -- HEADER (Line 1) - Red Bar
-    -- ==========================================
+    -- HEADER (Line 1)
     term.setCursorPos(1, 1)
     term.setBackgroundColor(cHead)
     term.setTextColor(cHeadText)
     term.clearLine()
     term.write(" BACOFY PRO 2.0")
     
-    -- Ingame Time (Top Right)
     local timeStr = textutils.formatTime(os.time(), true)
     term.setCursorPos(w - #timeStr, 1)
     term.write(timeStr)
     
-    -- ==========================================
-    -- SUBHEADER / SEARCH (Line 2) - Black Bar
-    -- ==========================================
+    -- SUBHEADER / SEARCH (Line 2)
     term.setCursorPos(1, 2)
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.white)
@@ -102,9 +96,7 @@ local function drawUI()
         term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
-    -- ==========================================
     -- LIST AREA (Line 3 to h-3)
-    -- ==========================================
     local listStartY = 3
     local listEndY = h - 3
     local maxDisplay = listEndY - listStartY + 1
@@ -117,7 +109,6 @@ local function drawUI()
     
     local listToDraw = (view == "MASTER") and playlists or filteredSongs
     
-    -- Scroll Offset Clamping
     if scrollOffset > #listToDraw - maxDisplay then
         scrollOffset = math.max(0, #listToDraw - maxDisplay)
     end
@@ -157,15 +148,12 @@ local function drawUI()
         end
     end
 
-    -- ==========================================
-    -- CONTROLS AREA (Line h-2 and h-1) - GRAY Background
-    -- ==========================================
+    -- CONTROLS AREA (Line h-2 and h-1)
     term.setBackgroundColor(cControlBg) 
     term.setTextColor(colors.white)
     
     local cButtonAccent = colors.red
 
-    -- Media Controls (h-2) dynamically centered
     term.setCursorPos(1, h - 2)
     term.clearLine()
     local playIcon = isPlaying and "||" or "> "
@@ -181,7 +169,6 @@ local function drawUI()
     term.setCursorPos(cx + 10, h - 2)
     term.write(">>")
     
-    -- Volume Controls (h-1) dynamically centered & separated
     term.setCursorPos(1, h - 1)
     term.clearLine()
     
@@ -208,9 +195,7 @@ local function drawUI()
     term.setCursorPos(startX + #vText - 3, h - 1)
     term.write("[+]")
 
-    -- ==========================================
-    -- STATUS FOOTER (Line h) - Red Bar
-    -- ==========================================
+    -- STATUS FOOTER (Line h)
     term.setCursorPos(1, h)
     term.setBackgroundColor(cHead)
     term.setTextColor(cHeadText)
@@ -225,20 +210,30 @@ local function drawUI()
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE (UNCHANGED)
+-- AUDIO STREAMING ENGINE (ÜBERARBEITET)
 -- ==========================================
 local function playSong(url)
     if not speaker then return end
     local res = http.get({ url = url, binary = true })
-    if not res then return end
+    if not res then 
+        if isPlaying then
+            currentIdx = currentIdx + 1
+            if currentIdx > #allSongs then currentIdx = 1 end
+        end
+        return 
+    end
     
-    isPlaying = true
     term.redirect(term.native()) 
     drawUI()
     
-    while isPlaying do
+    local eof = false
+    
+    while isPlaying and not forceSkip do
         local chunk = res.read(16384) 
-        if chunk == nil or chunk == "" then break end
+        if chunk == nil or chunk == "" then 
+            eof = true
+            break 
+        end
         
         local buffer = {}
         if type(chunk) == "string" then
@@ -259,22 +254,24 @@ local function playSong(url)
             end
         end
         
-        while isPlaying and not speaker.playAudio(buffer, vol) do
+        while isPlaying and not forceSkip and not speaker.playAudio(buffer, vol) do
             os.pullEvent("speaker_audio_empty")
         end
         os.sleep(0)
     end
     res.close()
     
-    if isPlaying then 
+    -- Auto-Play Logic
+    if forceSkip then
+        forceSkip = false
+    elseif eof and isPlaying then 
         currentIdx = currentIdx + 1
         if currentIdx > #allSongs then currentIdx = 1 end
-        os.queueEvent("start_music")
     end
 end
 
 -- ==========================================
--- INITIAL LOAD & APP START
+-- INITIAL LOAD
 -- ==========================================
 playlists = getList(masterURL)
 drawUI()
@@ -287,12 +284,10 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- MOUSE SCROLLING (Unchanged logic)
             if event == "mouse_scroll" then
                 scrollOffset = scrollOffset + p1
                 drawUI()
                 
-            -- TYPING (Search)
             elseif event == "char" and view == "PLAYLIST" then
                 searchQuery = searchQuery .. p1
                 scrollOffset = 0
@@ -302,7 +297,6 @@ parallel.waitForAny(
                 end
                 drawUI()
             
-            -- DELETE (Backspace)
             elseif event == "key" and p1 == keys.backspace and view == "PLAYLIST" and #searchQuery > 0 then
                 searchQuery = searchQuery:sub(1, -2)
                 scrollOffset = 0
@@ -312,14 +306,10 @@ parallel.waitForAny(
                 end
                 drawUI()
                 
-            -- MOUSE CLICKS
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
-                -- HEADER/SUBHEADER Zone (Line 1 & 2)
-                if y == 1 then
-                    -- Title area, do nothing
-                elseif y == 2 then
+                if y == 2 then
                     if view == "MASTER" and x > w - 8 then
                         playlists = getList(masterURL) 
                     elseif view == "PLAYLIST" and x <= 9 then
@@ -327,7 +317,6 @@ parallel.waitForAny(
                         scrollOffset = 0
                     end
                 
-                -- LIST ZONE (Line 3 to h-3)
                 elseif y >= 3 and y <= h - 3 then
                     local displayIdx = y - 2
                     local actualIdx = displayIdx + scrollOffset
@@ -348,32 +337,29 @@ parallel.waitForAny(
                                     currentIdx = i
                                     allSongs = currentSongs 
                                     break
-                                
                                 end
-                            
                             end
-                            isPlaying = false
                             playedPlaylistName = selectedPlaylist 
-                            os.queueEvent("start_music")
-                        
+                            if isPlaying then
+                                forceSkip = true
+                            else
+                                isPlaying = true
+                            end
+                            drawUI()
                         end
-                    
                     end
                     
-                -- MEDIA CONTROLS Zone (Line h-2)
                 elseif y == h - 2 then
                     if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
-                            isPlaying = false
-                            os.queueEvent("start_music")
+                            if isPlaying then forceSkip = true else isPlaying = true end
+                            drawUI()
                         end
                     elseif x >= cx - 4 and x <= cx then        -- [> / ||] Play/Pause
-                        isPlaying = not isPlaying
-                        if isPlaying and #allSongs > 0 then
-                            os.queueEvent("start_music")
-                        else
+                        if #allSongs > 0 then
+                            isPlaying = not isPlaying
                             drawUI() 
                         end
                     elseif x >= cx + 3 and x <= cx + 7 then    -- [[]] Stop
@@ -383,12 +369,11 @@ parallel.waitForAny(
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
-                            isPlaying = false
-                            os.queueEvent("start_music")
+                            if isPlaying then forceSkip = true else isPlaying = true end
+                            drawUI()
                         end
                     end
                     
-                -- VOLUME CONTROLS Zone (Line h-1)
                 elseif y == h - 1 then
                     local volStr = tostring(math.floor(vol * 100))
                     if #volStr == 1 then volStr = "0" .. volStr end
@@ -396,28 +381,29 @@ parallel.waitForAny(
                     local vTextLen = #("[-]    VOL: " .. volStr .. "    [+]")
                     local btnStart = cx - math.floor(vTextLen / 2)
 
-                    -- Click zone for [-]
                     if x >= btnStart - 1 and x <= btnStart + 3 then    
                         vol = vol - 0.1
                         if vol < 0.0 then vol = 0.0 end
-                    -- Click zone for [+]
                     elseif x >= btnStart + vTextLen - 4 and x <= btnStart + vTextLen + 1 then 
                         vol = vol + 0.1
                         if vol > 1.0 then vol = 1.0 end
                     end
+                    drawUI()
                 end
-                drawUI()
             end
         end
     end,
-    -- Audio Thread (unchanged)
+    -- Audio Polling Thread (NEU & STABIL)
     function()
         while true do
-            os.pullEvent("start_music")
-            if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
+            if isPlaying and #allSongs > 0 and allSongs[currentIdx] then
+                playSong(allSongs[currentIdx].url)
+            else
+                os.sleep(0.1)
+            end
         end
     end,
-    -- Auto-Scan (unchanged)
+    -- Auto-Scan
     function()
         while true do
             os.sleep(30)
@@ -431,9 +417,7 @@ parallel.waitForAny(
                     for _, s in ipairs(currentSongs) do 
                         if s.name:lower():find(searchQuery:lower()) then table.insert(filteredSongs, s) end 
                     end
-                
                 end
-            
             end
             drawUI()
         end
