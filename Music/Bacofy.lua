@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (The Sketch Edition)
+-- PROGRAM: BACOFY PRO (The Modern Palette Fix)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -8,11 +8,11 @@ local masterURL = baseURL .. "master.txt"
 
 -- STATE VARIABLES
 local playlists = {}
-local currentSongs = {} -- All songs in loaded playlist
-local filteredSongs = {} -- Songs after search filter
-local view = "MASTER" -- "MASTER" or "PLAYLIST"
-local selectedPlaylist = "" -- viewed PL name
-local viewedPlaylistSongs = {} -- songs in viewed PL
+local currentSongs = {} 
+local filteredSongs = {} 
+local view = "MASTER"
+local selectedPlaylist = "" 
+local viewedPlaylistSongs = {} 
 local searchQuery = ""
 local vol = 0.5
 local isPlaying = false
@@ -50,7 +50,7 @@ local function loadPlaylist(name)
 end
 
 -- ==========================================
--- UI DRAW ENGINE (IMPLEMENTING THE SKETCH)
+-- NEUES OPTIMIERTES DESIGN (SKETCH & CONTRAST FIX)
 -- ==========================================
 local function drawUI()
     -- Reset Terminal
@@ -58,86 +58,114 @@ local function drawUI()
     term.clear()
     
     -- ==========================================
-    -- ZONE 1: TOP HEADER (GRAY, Line 1)
+    -- ZONE 1: TOP HEADER (BLACK, Line 1)
     -- ==========================================
     term.setCursorPos(1, 1)
-    term.setBackgroundColor(colors.gray)
+    term.setBackgroundColor(colors.black) -- Schwarz für modernsten Look
     term.clearLine()
     term.setTextColor(colors.white)
-    term.write(" Bacofy Pro")
+    
+    local title = " Bacofy Pro"
+    term.write(title)
     
     term.setCursorPos(w - #("Refresh ") + 1, 1)
-    term.setTextColor(colors.cyan) -- Blau laut Sketch
-    term.write("Refresh")
+    term.setTextColor(colors.cyan) -- Blau für Refresh
+    term.write("[R] REF")
     
     -- ==========================================
-    -- ZONE 2: SEARCHBAR (GRAY, Line 2)
+    -- ZONE 2: SEARCHBAR (BLACK, Line 2)
     -- ==========================================
     term.setCursorPos(1, 2)
     term.clearLine()
     term.setTextColor(colors.lightGray)
-    term.write(" > search: ") -- "<Searchbar>" laut Sketch
+    term.write(" Suche: ")
     term.setTextColor(colors.white)
     term.write(searchQuery .. "_")
     
     -- ==========================================
-    -- ZONE 3: LIST AREA (RED, Lines 3 to h-4)
+    -- ZONE 3: LIST AREA (LIME, Lines 3 to h-4)
     -- ==========================================
-    -- Wir berechnen die Höhe des roten Bereichs.
+    -- Wir berechnen die Höhe des Listen-Bereichs.
     -- Er endet über dem Fake Progress Bar (h-3) und Controls (h-2 bis h).
     local listEndLine = h - 4
     for y = 3, listEndLine do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(colors.red) -- Roter Hintergrund
+        term.setBackgroundColor(colors.lime) -- Neue Palette: Grüner (Lime) Listenhintergrund
         term.clearLine()
     end
     
-    term.setTextColor(colors.white)
-    
     -- Handle View-spezifischen Listen-Inhalt
     if view == "MASTER" then
+        -- Sketch-Vorgabe: [BACK] Button, um zur Playlist Liste zu kommen
+        term.setCursorPos(1, 1)
+        term.setBackgroundColor(colors.black)
+        term.clearLine()
+        term.setTextColor(colors.white)
+        term.write(" Bacofy Pro") -- Titel
+        
+        term.setCursorPos(w - #("Refresh ") + 1, 1)
+        term.setTextColor(colors.cyan) -- Blau für Refresh
+        term.write("[R] REF")
+
+        -- Playlist Liste
+        term.setTextColor(colors.white)
+        term.setBackgroundColor(colors.lime) -- Sicherstellen, dass Bg stimmt
+
         for i, item in ipairs(playlists) do
             if i > (listEndLine - 3 + 1) then break end
             term.setCursorPos(2, 2 + i)
             
-            -- Sketch-Vorgabe: "blau" für inaktive (Cyan ist besser lesbar)
-            term.setBackgroundColor(colors.cyan)
-            term.setTextColor(colors.black)
-            -- Sketch-Look: Ein Balken
+            -- Sketch-Look: Ein Balken. Idle Songs sind Blau (Cyan)
+            -- Für maximale Lesbarkeit auf Lime machen wir einen Cyan-Balken mit weißem Text.
+            term.setBackgroundColor(colors.cyan) 
+            term.setTextColor(colors.white)
             term.write(" [ Playlist: " .. string.sub(item, 1, w - 16) .. " ] ")
         end
-    elseif view == "PLAYLIST" then
-        -- Sketch-Vorgabe: [BACK] Button, um zur Playlist Liste zu kommen
-        term.setCursorPos(1, 1)
-        term.setBackgroundColor(colors.blue)
-        term.setTextColor(colors.white)
-        term.write(" [< BACK] ")
-        -- Playlist Name im Header
-        term.setTextColor(colors.yellow)
-        term.write(" PL: " .. string.sub(selectedPlaylist, 1, w - 12))
         
-        -- Songs in der Liste (Cyan idle, Lime playing)
+    elseif view == "PLAYLIST" then
+        -- Header updaten für Playlist Ansicht
+        term.setCursorPos(1, 1)
+        term.setBackgroundColor(colors.black)
+        term.clearLine()
+        
+        -- Sketch-Vorgabe: [BACK] Button
+        term.setCursorPos(1, 1)
+        term.setTextColor(colors.cyan) -- Blau für Back Button
+        term.write(" [< BACK]")
+        
+        -- Playlist Name im Header
+        term.setCursorPos(10, 1)
+        term.setTextColor(colors.yellow)
+        term.write(" PL: " .. string.sub(selectedPlaylist, 1, w - 21))
+
+        term.setCursorPos(w - #("Refresh ") + 1, 1)
+        term.setTextColor(colors.cyan) -- Blau für Refresh
+        term.write("[R] REF")
+
+        -- Songs in der Liste (Cyan idle, Lime/Yellow playing)
         for i, item in ipairs(filteredSongs) do
             if i > (listEndLine - 3 + 1) then break end
             term.setCursorPos(2, 2 + i)
             
-            -- LOGIK FÜR DAS GRÜNE LICHT (Sketch-Vorgabe)
-            -- Es leuchtet nur dann grün, wenn wir die Playlist betrachten,
-            -- aus der das aktuelle Lied stammt.
-            local turnLime = false
+            -- LOGIK FÜR DAS AKTIVE LIED (Grünes Licht, bzw. Kontrast-Fix)
+            local turnYellow = false
             if isPlaying and allSongs[currentIdx] and playedPlaylistName == selectedPlaylist then
                 if item.url == allSongs[currentIdx].url then
-                    turnLime = true
+                    turnYellow = true
                 end
             end
             
-            if turnLime then
-                term.setBackgroundColor(colors.lime) -- Grün für "Active"
+            if turnYellow then
+                -- Sketch-Vorgabe: Das aktive Lied ist anders.
+                -- Für maximale Lesbarkeit auf Lime: Ein gelber Balken mit schwarzem Text. Das popt!
+                term.setBackgroundColor(colors.yellow) 
                 term.setTextColor(colors.black)
                 term.write(" [ > " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
             else
-                term.setBackgroundColor(colors.cyan) -- Blau für "Rest bleibt blau" (Cyan)
-                term.setTextColor(colors.black)
+                -- Sketch-Vorgabe: Rest bleibt blau (Cyan).
+                -- Cyan-Balken mit weißem Text für Lesbarkeit auf Lime.
+                term.setBackgroundColor(colors.cyan) 
+                term.setTextColor(colors.white)
                 term.write(" [   " .. i .. ". " .. string.sub(item.name, 1, w - 10) .. " ] ")
             end
         end
@@ -146,47 +174,55 @@ local function drawUI()
     -- ==========================================
     -- VISUELLE LÜCKE LAUT SKIZZE (Dots)
     -- ==========================================
-    term.setBackgroundColor(colors.red)
+    -- Wir bleiben auf dem Lime Hintergrund
+    term.setBackgroundColor(colors.lime)
+    term.setTextColor(colors.black) -- Schwarze Dots für Lesbarkeit
     term.setCursorPos(2, h-3)
     term.clearLine()
     term.write(" . . . . . ")
 
     -- ==========================================
-    -- ZONE 4: LOWER CONTROL AREA (YELLOW/LIME, h-2 to h)
+    -- ZONE 4: LOWER CONTROL AREA (RED, h-2 to h)
     -- ==========================================
-    -- Sketch: Fake Progress Bar auf Line h-2 (oder h-3)
+    -- Neue Palette: Roter Hintergrund für den gesamten Steuerbalken.
+    -- Text-Kontrast: Für maximale Lesbarkeit auf Rot, verwenden wir Weißen Text.
+    local textColorsOnRed = colors.white
+    local textColorsOnRedButtons = colors.lightGray -- Buttons etwas anders für visibility
+
+    -- Fake Progress Bar auf Line h-2 (oder h-3)
     local pbLine = h - 2
     term.setCursorPos(1, pbLine)
-    term.setBackgroundColor(colors.lime) -- "Gelb" laut Sketch (Lime ist besser)
-    term.setTextColor(colors.black)
+    term.setBackgroundColor(colors.red) -- Neue Palette: Roter Control-Balken
+    term.setTextColor(textColorsOnRed) -- Weißer Text
     term.clearLine()
     
     -- Sketch: "<song Progress bar>". Da CC RAW nicht spulen kann, ist es ein Fake Balken.
-    -- Wir malen einen Balken über die Breite.
     term.write(" [ --- RAW STREAM --- ] ")
 
     -- Sketch: Controls Line h-1
     local ctrlLine = h - 1
     term.setCursorPos(1, ctrlLine)
-    term.setBackgroundColor(colors.lime)
-    term.setTextColor(colors.black)
+    term.setBackgroundColor(colors.red) -- Roter Bg
+    term.setTextColor(textColorsOnRedButtons) -- Weißer/Grauer Text für Tasten
     term.clearLine()
     
     local pIcon = isPlaying and "[||]" or "[ >]"
     -- Sketch-Tasten: [-] [|<] [||>] [>|] [+]
+    -- Visuell popen die Tasten durch die eckigen Klammern.
     term.write("  [ - ]   [|<]     " .. pIcon .. "     [>|]   [ + ]")
 
     -- Sketch: Infobar Line h
     term.setCursorPos(1, h)
-    term.setBackgroundColor(colors.lime)
+    term.setBackgroundColor(colors.red) -- Roter Bg
+    term.setTextColor(textColorsOnRed) -- Weißer Text
     term.clearLine()
     
     local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "IDLE"
-    term.write(" NOW PLAYING: " .. string.sub(currentName, 1, w - 16))
+    term.write(" LÄUFT: " .. string.sub(currentName, 1, w - 9))
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE
+-- AUDIO STREAMING ENGINE (UNCHANGED)
 -- ==========================================
 local function playSong(url)
     if not speaker then return end
@@ -275,10 +311,10 @@ parallel.waitForAny(
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
-                -- TOP BAR Zone (Refresh)
+                -- TOP BAR Zone
                 if y == 1 then
                     if x > w - 10 then
-                        -- Refresh Button (Cyan)
+                        -- Refresh Button [R] REF (Cyan)
                         playlists = getList(masterURL)
                     elseif x <= 8 and view == "PLAYLIST" then
                         -- [< BACK] Button
@@ -315,33 +351,44 @@ parallel.waitForAny(
                         end
                     end
                     
-                -- LOWER CONTROL AREA Zones (Yellow/Lime, y h-1 bis h)
+                -- LOWER CONTROL AREA Zones (Red, y h-1 bis h)
                 elseif y == h - 1 then
                     -- Sketch: [-] [|<] [||>] [>|] [+]
-                    -- Zones auf Basis CC Grid 51 width (ungefähr)
-                    if x >= 2 and x <= 6 then           -- VOL DOWN
+                    -- Die Zonen sind jetzt besser lesbar durch die eckigen Klammern.
+                    -- Wir optimieren die Click-Zonen für bessere Clickability.
+                    
+                    -- VOL DOWN [-] (zones 1 to 7)
+                    if x >= 1 and x <= 7 then           
                         vol = vol - 0.1
                         if vol < 0.1 then vol = 1.0 end
-                    elseif x >= 8 and x <= 12 then      -- [|<] (Vorheriges Lied)
+                        
+                    -- PREVIOUS [|<] (zones 8 to 14)
+                    elseif x >= 8 and x <= 14 then      
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 15 and x <= 25 then     -- [||>] (Play/Pause)
+                        
+                    -- PLAY/PAUSE [||>] (zones 16 to 26)
+                    elseif x >= 16 and x <= 26 then     
                         isPlaying = not isPlaying
                         if isPlaying and #allSongs > 0 then
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 28 and x <= 32 then     -- [>|] (Nächstes Lied)
+                        
+                    -- NEXT [>|] (zones 28 to 34)
+                    elseif x >= 28 and x <= 34 then     
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 34 and x <= 38 then     -- VOL UP
+                        
+                    -- VOL UP [+] (zones 36 to 42)
+                    elseif x >= 36 and x <= 42 then     
                         vol = vol + 0.1
                         if vol > 1.0 then vol = 0.1 end
                     end
@@ -350,14 +397,14 @@ parallel.waitForAny(
             end
         end
     end,
-    -- Audio Thread
+    -- Audio Thread (UNCHANGED)
     function()
         while true do
             os.pullEvent("start_music")
             if allSongs[currentIdx] then playSong(allSongs[currentIdx].url) end
         end
     end,
-    -- Auto-Refresh (Alle 30 Sekunden im Hintergrund)
+    -- Auto-Refresh (Alle 30 Sekunden im Hintergrund, UNCHANGED)
     function()
         while true do
             os.sleep(30)
