@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (KAMI-RADIO VIBE)
+-- PROGRAM: BACOFY PRO (KAMI VIBE 2.1)
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -25,6 +25,7 @@ local playedPlaylistName = ""
 local scrollOffset = 0
 
 local w, h = term.getSize()
+local cx = math.floor(w / 2) -- Center of the screen
 
 -- Helper: Get List
 local function getList(url)
@@ -58,7 +59,6 @@ local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- COLORS FOR KAMI VIBE
     local cHead = colors.magenta
     local cListBg = colors.gray
     local cHighlight = colors.pink
@@ -72,7 +72,6 @@ local function drawUI()
     term.clearLine()
     term.write(" BACOFY PRO 2.0")
     
-    -- Ingame Time (Top Right)
     local timeStr = textutils.formatTime(os.time(), true)
     term.setCursorPos(w - #timeStr, 1)
     term.write(timeStr)
@@ -86,17 +85,15 @@ local function drawUI()
     term.clearLine()
     
     if view == "MASTER" then
-        term.write(" Playlist Selection")
-        term.setCursorPos(w - 6, 2)
+        term.write(" Playlists")
+        term.setCursorPos(w - 4, 2)
         term.setTextColor(colors.lightGray)
         term.write("[REF]")
     elseif view == "PLAYLIST" then
-        term.write(" (<-) " .. string.sub(selectedPlaylist, 1, 15))
-        term.setCursorPos(w - 18, 2)
-        term.setTextColor(colors.lightGray)
-        term.write("Q: ")
+        -- Only Searchbar in Playlist view!
+        term.write(" (<-) Search: ")
         term.setTextColor(colors.white)
-        term.write(string.sub(searchQuery .. "_", 1, 15))
+        term.write(string.sub(searchQuery .. "_", 1, w - 15))
     end
     
     -- ==========================================
@@ -106,7 +103,6 @@ local function drawUI()
     local listEndY = h - 3
     local maxDisplay = listEndY - listStartY + 1
     
-    -- Fill List Background
     for y = listStartY, listEndY do
         term.setCursorPos(1, y)
         term.setBackgroundColor(cListBg)
@@ -115,13 +111,11 @@ local function drawUI()
     
     local listToDraw = (view == "MASTER") and playlists or filteredSongs
     
-    -- Clamp Scroll Offset
     if scrollOffset > #listToDraw - maxDisplay then
         scrollOffset = math.max(0, #listToDraw - maxDisplay)
     end
     if scrollOffset < 0 then scrollOffset = 0 end
     
-    -- Draw Items
     for i = 1, maxDisplay do
         local idx = i + scrollOffset
         local item = listToDraw[idx]
@@ -159,26 +153,38 @@ local function drawUI()
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.white)
     
-    -- Main Controls (h-2)
+    -- Playback Controls (h-2) dynamically centered
     term.setCursorPos(1, h - 2)
     term.clearLine()
     local playIcon = isPlaying and "||" or "> "
-    term.write("    <<       " .. playIcon .. "       []       >>")
+    term.setCursorPos(cx - 9, h - 2)
+    term.write("<<     " .. playIcon .. "     []     >>")
     
-    -- Volume Controls (h-1)
+    -- Volume Controls (h-1) dynamically centered & separated
     term.setCursorPos(1, h - 1)
     term.clearLine()
+    
     local volStr = tostring(math.floor(vol * 100))
     if #volStr == 1 then volStr = "0" .. volStr end
+    if volStr == "100" then volStr = "MAX" end
     
+    local vText = "[-]    VOL: " .. volStr .. "    [+]"
+    local startX = cx - math.floor(#vText / 2)
+    
+    term.setCursorPos(startX, h - 1)
     term.setTextColor(colors.lightGray)
-    term.write("    --       x        -        ")
+    term.write("[-]")
+    
+    term.setCursorPos(startX + 7, h - 1)
+    term.write("VOL: ")
     term.setBackgroundColor(colors.gray)
     term.setTextColor(colors.white)
     term.write(volStr)
+    
     term.setBackgroundColor(colors.black)
     term.setTextColor(colors.lightGray)
-    term.write("        +")
+    term.setCursorPos(startX + #vText - 3, h - 1)
+    term.write("[+]")
 
     -- ==========================================
     -- STATUS FOOTER (Line h)
@@ -259,12 +265,10 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- SCROLLING MOUSE WHEEL
             if event == "mouse_scroll" then
                 scrollOffset = scrollOffset + p1
                 drawUI()
                 
-            -- SEARCH (Typing)
             elseif event == "char" and view == "PLAYLIST" then
                 searchQuery = searchQuery .. p1
                 scrollOffset = 0
@@ -274,7 +278,6 @@ parallel.waitForAny(
                 end
                 drawUI()
             
-            -- DELETE (Backspace)
             elseif event == "key" and p1 == keys.backspace and view == "PLAYLIST" and #searchQuery > 0 then
                 searchQuery = searchQuery:sub(1, -2)
                 scrollOffset = 0
@@ -284,16 +287,15 @@ parallel.waitForAny(
                 end
                 drawUI()
                 
-            -- MOUSE CLICKS
             elseif event == "mouse_click" then
                 local x, y = p2, p3
                 
                 -- HEADER ZONE (Line 2)
                 if y == 2 then
                     if view == "MASTER" and x > w - 6 then
-                        playlists = getList(masterURL) -- REFRESH
+                        playlists = getList(masterURL) 
                     elseif view == "PLAYLIST" and x <= 6 then
-                        view = "MASTER" -- BACK BUTTON (<-)
+                        view = "MASTER" 
                         scrollOffset = 0
                     end
                 
@@ -328,24 +330,24 @@ parallel.waitForAny(
                     
                 -- MEDIA CONTROLS (Line h-2)
                 elseif y == h - 2 then
-                    if x >= 3 and x <= 7 then           -- PREV [<<]
+                    if x >= cx - 11 and x <= cx - 7 then       -- PREV [<<]
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPlaying = false
                             os.queueEvent("start_music")
                         end
-                    elseif x >= 12 and x <= 16 then     -- PLAY/PAUSE [> / ||]
+                    elseif x >= cx - 4 and x <= cx then        -- PLAY/PAUSE [> / ||]
                         isPlaying = not isPlaying
                         if isPlaying and #allSongs > 0 then
                             os.queueEvent("start_music")
                         else
-                            drawUI() -- Update Status zu "Stopped"
+                            drawUI() 
                         end
-                    elseif x >= 21 and x <= 24 then     -- STOP []
+                    elseif x >= cx + 3 and x <= cx + 7 then    -- STOP []
                         isPlaying = false
                         drawUI()
-                    elseif x >= 29 and x <= 33 then     -- NEXT [>>]
+                    elseif x >= cx + 10 and x <= cx + 14 then  -- NEXT [>>]
                         if #allSongs > 0 then
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
@@ -356,14 +358,17 @@ parallel.waitForAny(
                     
                 -- VOLUME CONTROLS (Line h-1)
                 elseif y == h - 1 then
-                    if x >= 3 and x <= 6 then           -- VOL MIN [--]
-                        vol = 0.1
-                    elseif x >= 12 and x <= 14 then     -- MUTE [x]
-                        vol = 0.0
-                    elseif x >= 20 and x <= 23 then     -- VOL DOWN [-]
+                    -- Calculater dynamic click zones based on UI string
+                    local volStr = tostring(math.floor(vol * 100))
+                    if #volStr == 1 then volStr = "0" .. volStr end
+                    if volStr == "100" then volStr = "MAX" end
+                    local vTextLen = #("[-]    VOL: " .. volStr .. "    [+]")
+                    local btnStart = cx - math.floor(vTextLen / 2)
+
+                    if x >= btnStart - 1 and x <= btnStart + 3 then    -- VOL DOWN [-]
                         vol = vol - 0.1
                         if vol < 0.0 then vol = 0.0 end
-                    elseif x >= 37 and x <= 40 then     -- VOL UP [+]
+                    elseif x >= btnStart + vTextLen - 4 and x <= btnStart + vTextLen + 1 then -- VOL UP [+]
                         vol = vol + 0.1
                         if vol > 1.0 then vol = 1.0 end
                     end
@@ -380,8 +385,8 @@ parallel.waitForAny(
     end,
     function()
         while true do
-            os.sleep(30) -- Auto Update Background
-            -- UI draw update
+            os.sleep(30)
+            -- Background UI update omitted for loop safety, relying on normal actions
         end
     end
 )
