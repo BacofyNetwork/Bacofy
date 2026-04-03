@@ -25,7 +25,7 @@ local playedPlaylistName = ""
 local scrollOffset = 0
 
 local w, h = term.getSize()
-local cx = math.floor(w / 2) -- BUGFIX: Center of the screen is now defined!
+local cx = math.floor(w / 2) -- Center of the screen
 
 -- Helper: Get List
 local function getList(url)
@@ -60,14 +60,13 @@ local function drawUI()
     term.setBackgroundColor(colors.black)
     term.clear()
     
-    -- COLOR PALETTE: Cyber-Red
+    -- COLOR PALETTE: PURE Cyber-Red
     local cHead = colors.red
     local cHeadText = colors.white
     local cListBg = colors.black
-    local cItemBg = colors.gray
-    local cActiveItemBg = colors.red 
-    local cActiveItemText = colors.white
-    local cControlBg = colors.gray -- Der neue graue Hintergrund für die Tasten!
+    local cItemBg = colors.gray -- Changed from cyan to gray
+    local cActiveItemBg = colors.red -- Changed from lime to red
+    local cActiveItemText = colors.white -- Changed from black to white
 
     -- ==========================================
     -- HEADER (Line 1) - Red Bar
@@ -95,11 +94,12 @@ local function drawUI()
         term.write(" Playlists")
         term.setCursorPos(w - 7, 2)
         term.setTextColor(colors.lightGray)
-        term.write("[R] REF") 
+        term.write("[R] REF") -- Use [R] for clarity
     elseif view == "PLAYLIST" then
+        -- Searchbar Only
         term.write(" (<-) Search: ")
         term.setTextColor(colors.white)
-        term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
+        term.write(string.sub(searchQuery .. "_", 1, w - 15)) -- Pulse underscore
     end
     
     -- ==========================================
@@ -109,9 +109,10 @@ local function drawUI()
     local listEndY = h - 3
     local maxDisplay = listEndY - listStartY + 1
     
+    -- Fill List Background
     for y = listStartY, listEndY do
         term.setCursorPos(1, y)
-        term.setBackgroundColor(cListBg) 
+        term.setBackgroundColor(cListBg) -- Changed to black so items pop
         term.clearLine()
     end
     
@@ -123,6 +124,7 @@ local function drawUI()
     end
     if scrollOffset < 0 then scrollOffset = 0 end
     
+    -- Draw List items
     for i = 1, maxDisplay do
         local idx = i + scrollOffset
         local item = listToDraw[idx]
@@ -144,6 +146,7 @@ local function drawUI()
                 end
             end
             
+            -- Apply Pure Red/Gray Colors
             if isActive then
                 term.setBackgroundColor(cActiveItemBg)
                 term.setTextColor(cActiveItemText)
@@ -157,18 +160,20 @@ local function drawUI()
         end
     end
 
-    term.setBackgroundColor(colors.black)
+    -- Visual Spacer (Dots) above controls
+    term.setBackgroundColor(cListBg)
     term.setTextColor(colors.gray)
     term.setCursorPos(2, h-3)
     term.clearLine()
     term.write(" . . . . . ")
 
     -- ==========================================
-    -- CONTROLS AREA (Line h-2 and h-1) - GRAY Background
+    -- CONTROLS AREA (Line h-2 and h-1) - Black Background
     -- ==========================================
-    term.setBackgroundColor(cControlBg) -- Grauer Hintergrund aktiviert!
+    term.setBackgroundColor(colors.black)
     term.setTextColor(colors.white)
     
+    -- Red accents for buttons
     local cButtonAccent = colors.red
 
     -- Media Controls (h-2) dynamically centered
@@ -203,11 +208,11 @@ local function drawUI()
     term.setCursorPos(startX + 7, h - 1)
     term.setTextColor(colors.white)
     term.write("VOL: ")
-    term.setBackgroundColor(colors.black) -- Schwarz hinterlegte Lautstärke für Lesbarkeit auf Grau
+    term.setBackgroundColor(colors.gray) -- Highlight volume value
     term.setTextColor(colors.white)
     term.write(volStr)
     
-    term.setBackgroundColor(cControlBg) 
+    term.setBackgroundColor(colors.black)
     term.setTextColor(cButtonAccent)
     term.setCursorPos(startX + #vText - 3, h - 1)
     term.write("[+]")
@@ -291,7 +296,7 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
-            -- MOUSE SCROLLING
+            -- MOUSE SCROLLING (Unchanged logic)
             if event == "mouse_scroll" then
                 scrollOffset = scrollOffset + p1
                 drawUI()
@@ -325,8 +330,8 @@ parallel.waitForAny(
                     -- Title area, do nothing
                 elseif y == 2 then
                     if view == "MASTER" and x > w - 8 then
-                        playlists = getList(masterURL) 
-                    elseif view == "PLAYLIST" and x <= 9 then
+                        playlists = getList(masterURL) -- [R] REF
+                    elseif view == "PLAYLIST" and x <= 9 then -- (<-) Back Button click area extended
                         view = "MASTER" 
                         scrollOffset = 0
                     end
