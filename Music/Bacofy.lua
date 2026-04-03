@@ -1,13 +1,13 @@
 -- ==========================================
 -- PROGRAM: BACOFY PRO (Cyber-Red Edition)
--- FINAL VERSION: WIRELESS BROADCASTING
+-- FINAL VERSION: SURROUND SOUND & WIRELESS
 -- ==========================================
 
-local speaker = peripheral.find("speaker")
+local speakers = {peripheral.find("speaker")} -- NEU: Findet ALLE angeschlossenen Speaker!
 local monitor = peripheral.find("monitor") 
-local modem = peripheral.find("modem") -- NEU: Das Wireless Modem
+local modem = peripheral.find("modem") 
 
-local BROADCAST_CHANNEL = 8585 -- Der Funkkanal für die Base
+local BROADCAST_CHANNEL = 8585 
 
 local baseURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/"
 local masterURL = baseURL .. "master.txt"
@@ -95,7 +95,6 @@ local function drawUI()
     display.setTextColor(cHeadText)
     display.clearLine()
     
-    -- Anzeige, ob wir senden
     if modem then
         display.write(" BACOFY PRO 2.0 [WIRELESS TX]")
     else
@@ -263,11 +262,10 @@ local function drawUI()
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE (WITH WIRELESS)
+-- AUDIO STREAMING ENGINE (MULTI-SPEAKER)
 -- ==========================================
 local function playSong(url)
-    -- Wenn weder Speaker noch Modem da ist, können wir nichts tun
-    if not speaker and not modem then return end
+    if #speakers == 0 and not modem then return end
     
     local reqHeaders = {}
     if seekTargetRatio and totalBytes > 0 then
@@ -341,19 +339,26 @@ local function playSong(url)
             
             local queued = false
             while isPlaying and not forceSkip and not isPaused and not seekTargetRatio and not queued do
-                if speaker then
-                    -- Normaler lokaler Lautsprecher + Synchroner Broadcast
-                    if speaker.playAudio(buffer, vol) then
+                if #speakers > 0 then
+                    -- Wir nutzen den ersten Lautsprecher als "Taktgeber"
+                    if speakers[1].playAudio(buffer, vol) then
+                        -- Wenn der erste bereit ist, feuern wir es synchron an alle anderen raus!
+                        for i = 2, #speakers do
+                            speakers[i].playAudio(buffer, vol)
+                        end
+                        
+                        -- Und zusaetzlich ins Wireless-Netzwerk fuer die restliche Base
                         if modem then modem.transmit(BROADCAST_CHANNEL, BROADCAST_CHANNEL, {b = buffer, v = vol}) end
+                        
                         queued = true
                         pendingBuffer = nil
                     else
                         os.pullEvent()
                     end
                 else
-                    -- Fallback: Nur Serverbetrieb (ohne eigenen Lautsprecher)
+                    -- Fallback: Nur als Funk-Server ohne eigene Lautsprecher
                     if modem then modem.transmit(BROADCAST_CHANNEL, BROADCAST_CHANNEL, {b = buffer, v = vol}) end
-                    os.sleep(0.3) -- Pufferzeit simulieren
+                    os.sleep(0.3)
                     queued = true
                     pendingBuffer = nil
                 end
