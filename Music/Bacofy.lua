@@ -1,6 +1,6 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO 
--- ULTIMATE FINAL VERSION: CENTERED PROGRESS
+-- BACOFY PRO (Cyber-Red Edition)
+-- ULTIMATE FINAL VERSION: FULL-WIDTH PROGRESS
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -163,11 +163,11 @@ local function drawUI()
     
     local cButtonAccent = colors.red
 
-    -- PROGRESS BAR (Line h-3) - JETZT PERFEKT ZENTRIERT
+    -- PROGRESS BAR (Line h-3) - JETZT FAST VOLLE BREITE (w-2)
     term.setCursorPos(1, h - 3)
     term.clearLine()
-    local barW = 20 -- Breite angepasst für bessere Symmetrie
-    local barStartX = math.max(1, cx - math.floor(barW / 2))
+    local barW = w - 2 -- Fast volle Breite, 1 Block Rand links/rechts
+    local barStartX = 2
     
     term.setCursorPos(barStartX, h - 3)
     if totalBytes > 0 and (isPlaying or isPaused) then
@@ -429,8 +429,8 @@ parallel.waitForAny(
                     end
                     
                 elseif y == h - 3 then
-                    local barW = 20
-                    local barStartX = cx - math.floor(barW / 2)
+                    local barW = w - 2
+                    local barStartX = 2
                     if x >= barStartX and x < barStartX + barW then
                         if totalBytes > 0 and (isPlaying or isPaused) then
                             seekTargetRatio = (x - barStartX) / barW
