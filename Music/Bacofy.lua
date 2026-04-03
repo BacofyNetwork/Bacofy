@@ -1,5 +1,6 @@
 -- ==========================================
--- BACOFY PRO (Cyber-Red Edition)
+-- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- ULTIMATE PROGRESS BAR UPDATE
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
@@ -14,11 +15,18 @@ local view = "MASTER"
 local selectedPlaylist = "" 
 local searchQuery = ""
 local vol = 0.5
+
+-- AUDIO ENGINE STATE
 local isPlaying = false
-local isPaused = false -- NEU: Echte Pause-Logik
+local isPaused = false 
 local forceSkip = false 
 
--- AUDIO TRACKING
+-- SEEKING & PROGRESS STATE
+local currentBytes = 0
+local totalBytes = 0
+local seekTargetRatio = nil
+
+-- TRACKING
 local allSongs = {} 
 local currentIdx = 1 
 local playedPlaylistName = "" 
@@ -97,9 +105,9 @@ local function drawUI()
         term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
-    -- LIST AREA (Line 3 to h-3)
+    -- LIST AREA (Line 3 to h-4) -- PLATZ GEMACHT FÜR DIE PROGRESS BAR!
     local listStartY = 3
-    local listEndY = h - 3
+    local listEndY = h - 4
     local maxDisplay = listEndY - listStartY + 1
     
     for y = listStartY, listEndY do
@@ -149,15 +157,39 @@ local function drawUI()
         end
     end
 
-    -- CONTROLS AREA (Line h-2 and h-1)
+    -- CONTROLS AREA BACKGROUND
     term.setBackgroundColor(cControlBg) 
     term.setTextColor(colors.white)
     
     local cButtonAccent = colors.red
 
+    -- PROGRESS BAR (Line h-3)
+    term.setCursorPos(1, h - 3)
+    term.clearLine()
+    local barW = 24
+    local barStartX = cx - math.floor(barW / 2)
+    
+    term.setCursorPos(barStartX, h - 3)
+    if totalBytes > 0 and (isPlaying or isPaused) then
+        local progress = currentBytes / totalBytes
+        if progress > 1 then progress = 1 end
+        if progress < 0 then progress = 0 end
+        
+        local filled = math.floor(progress * barW)
+        local empty = barW - filled
+        
+        term.setTextColor(colors.red)
+        term.write(string.rep("=", filled))
+        term.setTextColor(colors.black)
+        term.write(string.rep("-", empty))
+    else
+        term.setTextColor(colors.black)
+        term.write(string.rep("-", barW))
+    end
+
+    -- MEDIA BUTTONS (Line h-2)
     term.setCursorPos(1, h - 2)
     term.clearLine()
-    -- Zeigt "||" an wenn es spielt, ">" wenn es pausiert oder gestoppt ist
     local playIcon = (isPlaying and not isPaused) and "||" or "> "
     term.setCursorPos(cx - 9, h - 2)
     term.setTextColor(cButtonAccent)
@@ -171,6 +203,7 @@ local function drawUI()
     term.setCursorPos(cx + 10, h - 2)
     term.write(">>")
     
+    -- VOLUME CONTROLS (Line h-1)
     term.setCursorPos(1, h - 1)
     term.clearLine()
     
@@ -179,13 +212,13 @@ local function drawUI()
     if volStr == "100" then volStr = "MAX" end
     
     local vText = "[-]    VOL: " .. volStr .. "    [+]"
-    local startX = cx - math.floor(#vText / 2)
+    local vStartX = cx - math.floor(#vText / 2)
     
-    term.setCursorPos(startX, h - 1)
+    term.setCursorPos(vStartX, h - 1)
     term.setTextColor(cButtonAccent)
     term.write("[-]")
     
-    term.setCursorPos(startX + 7, h - 1)
+    term.setCursorPos(vStartX + 7, h - 1)
     term.setTextColor(colors.white)
     term.write("VOL: ")
     term.setBackgroundColor(colors.black)
@@ -194,7 +227,7 @@ local function drawUI()
     
     term.setBackgroundColor(cControlBg) 
     term.setTextColor(cButtonAccent)
-    term.setCursorPos(startX + #vText - 3, h - 1)
+    term.setCursorPos(vStartX + #vText - 3, h - 1)
     term.write("[+]")
 
     -- STATUS FOOTER (Line h)
@@ -216,11 +249,23 @@ local function drawUI()
 end
 
 -- ==========================================
--- AUDIO STREAMING ENGINE (MIT ECHTER PAUSE)
+-- AUDIO STREAMING ENGINE (MIT ECHTEM SEEKING!)
 -- ==========================================
 local function playSong(url)
     if not speaker then return end
-    local res = http.get({ url = url, binary = true })
+    
+    -- HTTP Range Request Header bauen, falls wir springen
+    local reqHeaders = {}
+    if seekTargetRatio and totalBytes > 0 then
+        currentBytes = math.floor(totalBytes * seekTargetRatio)
+        reqHeaders["Range"] = "bytes=" .. currentBytes .. "-"
+        seekTargetRatio = nil
+    else
+        currentBytes = 0
+        totalBytes = 0
+    end
+    
+    local res = http.get({ url = url, binary = true, headers = reqHeaders })
     if not res then 
         if isPlaying then
             currentIdx = currentIdx + 1
@@ -229,15 +274,21 @@ local function playSong(url)
         return 
     end
     
+    -- Hole Dateigröße für die Progress Bar
+    local respHeaders = res.getResponseHeaders and res.getResponseHeaders() or {}
+    if currentBytes == 0 then
+        totalBytes = tonumber(respHeaders["Content-Length"]) or tonumber(respHeaders["content-length"]) or 0
+    end
+    
     term.redirect(term.native()) 
     drawUI()
     
     local eof = false
-    local pendingBuffer = nil -- Speichert den Schnipsel beim Pausieren
+    local pendingBuffer = nil 
+    local chunksRead = 0
     
-    while isPlaying and not forceSkip do
+    while isPlaying and not forceSkip and not seekTargetRatio do
         if isPaused then
-            -- Wenn pausiert, warte einfach auf ein neues Event (wie unpause)
             os.pullEvent()
         else
             local buffer = pendingBuffer
@@ -250,36 +301,43 @@ local function playSong(url)
                 
                 buffer = {}
                 if type(chunk) == "string" then
+                    currentBytes = currentBytes + #chunk
                     for i = 1, #chunk do
                         local val = string.byte(chunk, i)
                         if val > 127 then val = val - 256 end
                         table.insert(buffer, val)
                     end
                 elseif type(chunk) == "number" then
+                    currentBytes = currentBytes + 1
                     local val = chunk
                     if val > 127 then val = val - 256 end
                     table.insert(buffer, val)
                     for i = 2, 4096 do
                         local b = res.read()
                         if not b then break end
+                        currentBytes = currentBytes + 1
                         if b > 127 then b = b - 256 end
                         table.insert(buffer, b)
                     end
                 end
+                
+                -- Live Update der Progress Bar (ca. jede Sekunde)
+                chunksRead = chunksRead + 1
+                if chunksRead % 3 == 0 then
+                    drawUI() 
+                end
             end
             
             local queued = false
-            while isPlaying and not forceSkip and not isPaused and not queued do
+            while isPlaying and not forceSkip and not isPaused and not seekTargetRatio and not queued do
                 if speaker.playAudio(buffer, vol) then
                     queued = true
                     pendingBuffer = nil
                 else
-                    -- Warte darauf, dass der Speaker Platz hat ODER ein Button gedrückt wurde
                     os.pullEvent()
                 end
             end
             
-            -- Falls wir wegen Pause/Stop abgebrochen haben, heb den Buffer auf!
             if not queued then
                 pendingBuffer = buffer
             end
@@ -287,10 +345,9 @@ local function playSong(url)
     end
     res.close()
     
-    -- Auto-Play Logic
     if forceSkip then
         forceSkip = false
-    elseif eof and isPlaying then 
+    elseif eof and isPlaying and not seekTargetRatio then 
         currentIdx = currentIdx + 1
         if currentIdx > #allSongs then currentIdx = 1 end
     end
@@ -343,7 +400,7 @@ parallel.waitForAny(
                         scrollOffset = 0
                     end
                 
-                elseif y >= 3 and y <= h - 3 then
+                elseif y >= 3 and y <= h - 4 then
                     local displayIdx = y - 2
                     local actualIdx = displayIdx + scrollOffset
                     
@@ -368,17 +425,33 @@ parallel.waitForAny(
                             playedPlaylistName = selectedPlaylist 
                             isPaused = false
                             if isPlaying then forceSkip = true else isPlaying = true end
-                            os.queueEvent("audio_update") -- Weckt die Audio-Engine
+                            seekTargetRatio = nil 
+                            os.queueEvent("audio_update") 
                             drawUI()
                         end
                     end
                     
+                -- KLICKBARE PROGRESS BAR (Line h-3)
+                elseif y == h - 3 then
+                    local barW = 24
+                    local barStartX = cx - math.floor(barW / 2)
+                    if x >= barStartX and x < barStartX + barW then
+                        if totalBytes > 0 and (isPlaying or isPaused) then
+                            seekTargetRatio = (x - barStartX) / barW
+                            isPaused = false 
+                            os.queueEvent("audio_update")
+                            drawUI()
+                        end
+                    end
+                    
+                -- MEDIA CONTROLS (Line h-2)
                 elseif y == h - 2 then
                     if x >= cx - 11 and x <= cx - 7 then       -- [<<] Prev
                         if #allSongs > 0 then
                             currentIdx = currentIdx - 1
                             if currentIdx < 1 then currentIdx = #allSongs end
                             isPaused = false
+                            seekTargetRatio = nil
                             if isPlaying then forceSkip = true else isPlaying = true end
                             os.queueEvent("audio_update")
                             drawUI()
@@ -397,6 +470,8 @@ parallel.waitForAny(
                     elseif x >= cx + 3 and x <= cx + 7 then    -- [[]] Stop
                         isPlaying = false
                         isPaused = false
+                        seekTargetRatio = nil
+                        currentBytes = 0
                         os.queueEvent("audio_update")
                         drawUI()
                     elseif x >= cx + 10 and x <= cx + 14 then  -- [>>] Next
@@ -404,12 +479,14 @@ parallel.waitForAny(
                             currentIdx = currentIdx + 1
                             if currentIdx > #allSongs then currentIdx = 1 end
                             isPaused = false
+                            seekTargetRatio = nil
                             if isPlaying then forceSkip = true else isPlaying = true end
                             os.queueEvent("audio_update")
                             drawUI()
                         end
                     end
                     
+                -- VOLUME CONTROLS (Line h-1)
                 elseif y == h - 1 then
                     local volStr = tostring(math.floor(vol * 100))
                     if #volStr == 1 then volStr = "0" .. volStr end
@@ -432,7 +509,6 @@ parallel.waitForAny(
     function()
         while true do
             if isPlaying and #allSongs > 0 and allSongs[currentIdx] then
-                -- playSong blockiert hier, bis das Lied zu Ende ist, gestoppt oder geskippt wird.
                 playSong(allSongs[currentIdx].url)
             else
                 os.sleep(0.1)
