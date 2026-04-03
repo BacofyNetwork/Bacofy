@@ -1,1 +1,96 @@
 https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Thunderstruck.raw, Thunderstruck
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHighwaytoHellLiveAtRiverPlateDecember2009.raw, AC/DC - Highway to Hell (Live At River Plate, December 2009)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCWhoMadeWhoOfficialHDVideo.raw, AC/DC - Who Made Who (Official HD Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHellsBellsOfficial4KVideo.raw, AC/DC - Hells Bells (Official 4K Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCRockNRollTrainLiveAtRiverPlateDecember2009.raw, AC/DC - Rock N Roll Train (Live At River Plate, December 2009)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCTNTOfficialAudio.raw, AC/DC - T.N.T. (Official Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCRocktheBluesAwayOfficialVideo.raw, AC/DC - Rock the Blues Away (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCThunderstruck.raw, AC/DC - Thunderstruck
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCStiffUpperLipOfficialHDVideo.raw, AC/DC - Stiff Upper Lip (Official HD Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ShoottoThrill.raw, Shoot to Thrill
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCShotInTheDarkOfficialVideo.raw, AC/DC - Shot In The Dark (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCLetThereBeRockOfficialVideo.raw, AC/DC - Let There Be Rock (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCShotDownInFlamesOfficialVideo.raw, AC/DC - Shot Down In Flames (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GunsNRosesParadiseCityOfficialMusicVideo.raw, Guns N' Roses - Paradise City (Official Music Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCItsaLongWaytotheTopIfYouWannaRockNRollAudio.raw, AC/DC - It's a Long Way to the Top (If You Wanna Rock 'N' Roll) (Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MetallicaEnterSandmanOfficialMusicVideo.raw, Metallica: Enter Sandman (Official Music Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCYouShookMeAllNightLongHQ.raw, AC/DC  -  You Shook Me All Night Long (HQ)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/Overdose.raw, Overdose
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BonJoviLivinOnAPrayer.raw, Bon Jovi - Livin' On A Prayer
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCWalkAllOverYouOfficialVideo.raw, AC/DC - Walk All Over You (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCLetMePutMyLoveIntoYouOfficial4KVideo.raw, AC/DC - Let Me Put My Love Into You (Official 4K Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCRiffRaffOfficialHDVideo.raw, AC/DC - Riff Raff (Official HD Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHaveaDrinkonMeOfficialAudio.raw, AC/DC - Have a Drink on Me (Official Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BonJoviItsMyLifeOfficialMusicVideo.raw, Bon Jovi - It's My Life (Official Music Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCDemonFireOfficialVideo.raw, AC/DC - Demon Fire (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCProshotcompletoFULLPROSHOTIfYouWantBloodYouveGotItMadrid12072025.raw, AC/DC Proshot completo( FULL PROSHOT) 'If You Want Blood (You've Got It)'. Madrid. 12/07/2025.
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/QueenWeWillRockYouOfficialVideo.raw, Queen - We Will Rock You (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GunsNRosesSweetChildOMineLyrics.raw, Guns N' Roses - Sweet Child O' Mine (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AerosmithDreamOnLyrics.raw, Aerosmith - Dream On (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/MasterofPuppetsRemastered.raw, Master of Puppets (Remastered)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EuropeTheFinalCountdownLyrics.raw, Europe - The Final Countdown (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCBackInBlackLyrics.raw, AC/DC - Back In Black (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SinCityACDCTheMidnightSpecial.raw, Sin City - AC/DC | The Midnight Special
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCRideOnStadeDeFranceParisJune2001.raw, AC/DC - Ride On (Stade De France, Paris, June 2001)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIfYouWantBloodYouveGotItSoldierFieldChicago52425.raw, AC/DC - If You Want Blood (You've Got It) @ Soldier Field, Chicago 5/24/25
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDChacevibrarSevillaconsuhardrockensuprimerconcierto.raw, AC/DC hace vibrar Sevilla con su hard-rock en su primer concierto
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RamJamBlackBettyOfficialVideo.raw, Ram Jam - Black Betty (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCYouShookMeAllNightLong23032026RiverPlateBuenosAiresArgentina.raw, AC/DC - You Shook Me All Night Long. 23-03-2026 River Plate, Buenos Aires, Argentina
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCFlingThingRockerFilmedApril301978.raw, AC/DC - Fling Thing/Rocker (Filmed April 30, 1978)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OzzyOsbourneCrazyTrainOfficialAnimatedVideo.raw, Ozzy Osbourne - Crazy Train (Official Animated Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LynyrdSkynyrdSweetHomeAlabamaLyricVideo.raw, Lynyrd Skynyrd - Sweet Home Alabama (Lyric Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CreedenceClearwaterRevivalFortunateSon.raw, Creedence Clearwater Revival - Fortunate Son
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIfYouWantBloodYouveGotItSydneyAccorStadium21112025.raw, AC/DC - If You Want Blood (You’ve Got It) - Sydney - Accor Stadium - 21/11/2025
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHighwayToHell23032026RiverPlateBuenosAiresArgentina.raw, AC/DC - Highway To Hell. 23-03-2026 River Plate, Buenos Aires, Argentina
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIfYouWantBloodYouveGotItLiveFordFieldDetroitMIApril302025.raw, AC/DC - If You Want Blood (You’ve Got It) - Live @ Ford Field - Detroit MI - April 30, 2025
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIntroIfYouWantBloodYouveGotIt23032026RiverPlateBuenosAiresArgentina.raw, AC/DC - Intro + If You Want Blood (You’ve Got It). 23-03-2026 River Plate, Buenos Aires, Argentina
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCMistressForChristmasHappyHolidays.raw, AC/DC - Mistress For Christmas - Happy Holidays
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHighwaytoHellLiveSantiagodeChile.raw, AC/DC - Highway to Hell (Live) - Santiago de Chile
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/JourneyDontStopBelievinLyrics.raw, Journey - Don't Stop Believin' (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EaglesHotelCaliforniaOfficialAudio.raw, Eagles - Hotel California (Official Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCSevilla2024HighwaytoHell.raw, AC/DC.Sevilla 2024.Highway to Hell.
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIfYouWantBloodYouGotItUSBANKTOURKICKOFFMinneapolis2025.raw, AC/DC  If You Want Blood ( You Got It!)  US BANK - TOUR KICK OFF - Minneapolis!! 2025
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SurvivorEyeOfTheTigerLyrics.raw, Survivor - Eye Of The Tiger (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KickstartMyHeart2024Remaster.raw, Kickstart My Heart (2024 Remaster)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ForWhomTheBellTollsRemastered.raw, For Whom The Bell Tolls (Remastered)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheOutfieldYourLoveOfficialHDVideo.raw, The Outfield - Your Love (Official HD Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/JoanJettandtheBlackheartsILoveRockNRollLyrics.raw, Joan Jett and the Blackhearts - I Love Rock 'N Roll (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCJailbreak12Nov2025MelbourneMCG.raw, ACDC - Jailbreak - 12 Nov 2025, Melbourne MCG
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/DaveGrohlFooFightersTributoaMalcolmYoungACDC.raw, Dave Grohl - Foo Fighters   Tributo a  Malcolm Young  - AC DC
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCForThoseAbouttoRockBrisbane18December2025LASTACDCSHOWINAUSTRALIA.raw, AC/DC – For Those About to Rock - Brisbane, 18 December 2025 - LAST AC/DC SHOW IN AUSTRALIA
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LynyrdSkynyrdFreeBirdOfficialAudio.raw, Lynyrd Skynyrd - Free Bird (Official Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIfYouWantBloodLiveInSoPaulo2026.raw, ACDC - If You Want Blood (Live In São Paulo 2026)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BlackSabbathParanoidOfficialAudio.raw, Black Sabbath - Paranoid (Official Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCHighVoltage04032026MorumBis.raw, AC/DC - High Voltage - 04/03/2026 - MorumBis 
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCIntroIfYouWantBloodYouveGotIt24022026MorumBis.raw, AC/DC - Intro / If You Want Blood (You’ve Got It) - 24/02/2026 - MorumBis 
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ThunderstruckbyStevenSeagullsLIVE.raw, Thunderstruck by Steve'n'Seagulls (LIVE)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCEnVivoWholeLottaRosieLiveinSantiagoChile11032026.raw, AC/DC En Vivo - Whole Lotta Rosie (Live in Santiago, Chile, 11/03/2026)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LukeCombsAintNoLoveInOklahomaFromTwistersTheAlbumOfficialMusicVideo.raw, Luke Combs – Ain’t No Love In Oklahoma (From Twisters: The Album) [Official Music Video]
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/SpiderbaitBlackBettyAudio.raw, Spiderbait - Black Betty (Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AllAngusYoungGuitarsCollection.raw, All Angus Young Guitars Collection
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ACDCsTNTplayedbyonemanbandMarkatntacdc.raw, AC/DC’s TNT played by one-man-band @Marka  ⚡ #tnt #acdc
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KissIWasMadeForLovinYou.raw, Kiss - I Was Made For Lovin' You
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/InTheEndOfficialHDMusicVideoLinkinPark.raw, In The End [Official HD Music Video] - Linkin Park
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KennyLogginsDangerZoneLyrics.raw, Kenny Loggins - Danger Zone (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/CoolioGangstasParadisefeatLVOfficialMusicVideo.raw, Coolio - Gangsta's Paradise (feat. L.V.) [Official Music Video]
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NumbOfficialMusicVideo4KUPGRADELinkinPark.raw, Numb (Official Music Video) [4K UPGRADE] – Linkin Park
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RagnBoneManHumanOfficialVideo.raw, Rag'n'Bone Man - Human (Official Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ahaTakeOnMeOfficialVideo4K.raw, a-ha - Take On Me (Official Video) [4K]
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BonnieTylerHoldingOutForAHeroLyrics.raw, Bonnie Tyler - Holding Out For A Hero (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/TheRollingStonesPaintItBlackOfficialLyricVideo.raw, The Rolling Stones - Paint It, Black (Official Lyric Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/KennyLogginsFootlooseLyrics.raw, Kenny Loggins - Footloose (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EltonJohnImStillStandingLyrics.raw, Elton John - I'm Still Standing (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FallOutBoyCenturiesLyrics.raw, Fall Out Boy - Centuries (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/EurythmicsSweetDreamsLyrics.raw, Eurythmics - Sweet Dreams (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/NSYNCByeByeByeLyricsDeadpool3Soundtrack.raw, *NSYNC - Bye Bye Bye (Lyrics) (Deadpool 3 Soundtrack)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/OneRepublicCountingStarsLyrics.raw, OneRepublic - Counting Stars (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AaronSmithDancinKRONORemixLyrics.raw, Aaron Smith - Dancin (KRONO Remix) - Lyrics
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/ABBAGimmeGimmeGimmeAManAfterMidnight.raw, ABBA - Gimme! Gimme! Gimme! (A Man After Midnight)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/RedboneComeandGetYourLoveSingleEditAudio.raw, Redbone - Come and Get Your Love (Single Edit - Audio)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/LadyGagaBrunoMarsDieWithASmileLyrics.raw, Lady Gaga, Bruno Mars - Die With A Smile (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/BensonBooneBeautifulThingsOfficialMusicVideo.raw, Benson Boone - Beautiful Things (Official Music Video)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/FallOutBoyImmortalsfromBigHero6.raw, Fall Out Boy - Immortals (from Big Hero 6)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/PostMaloneSwaeLeeSunflowerSpiderManIntotheSpiderVerse.raw, Post Malone, Swae Lee - Sunflower (Spider-Man: Into the Spider-Verse)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/AlexWarrenOrdinaryLyrics.raw, Alex Warren - Ordinary (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/VanceJoyRiptideLyrics.raw, Vance Joy - Riptide (Lyrics)
+https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/GoldenOfficialLyricVideoKPopDemonHuntersSonyAnimation.raw, “Golden” Official Lyric Video | KPop Demon Hunters | Sony Animation
