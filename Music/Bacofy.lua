@@ -1,11 +1,19 @@
 -- ==========================================
--- BACOFY PRO (Cyber-Red Edition)
--- ULTIMATE FINAL VERSION: FULL-WIDTH PROGRESS
+-- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- FINAL VERSION: AUTO-MONITOR & PROGRESS BAR
 -- ==========================================
 
 local speaker = peripheral.find("speaker")
+local monitor = peripheral.find("monitor") -- Sucht nach Monitoren
 local baseURL = "https://raw.githubusercontent.com/BacofyNetwork/Bacofy/main/Music/"
 local masterURL = baseURL .. "master.txt"
+
+-- MONITOR LOGIC
+local display = term -- Standardmäßig der Computer-Screen
+if monitor then
+    display = monitor
+    display.setTextScale(0.5) -- Kleinere Schrift für mehr Platz auf Monitoren
+end
 
 -- STATE VARIABLES
 local playlists = {}
@@ -34,7 +42,7 @@ local playedPlaylistName = ""
 -- SCROLLING
 local scrollOffset = 0
 
-local w, h = term.getSize()
+local w, h = display.getSize()
 local cx = math.floor(w / 2) 
 
 -- Helper: Get List
@@ -66,8 +74,8 @@ end
 -- UI DRAW ENGINE (Cyber-Red Aesthetic)
 -- ==========================================
 local function drawUI()
-    term.setBackgroundColor(colors.black)
-    term.clear()
+    display.setBackgroundColor(colors.black)
+    display.clear()
     
     local cHead = colors.red
     local cHeadText = colors.white
@@ -78,31 +86,31 @@ local function drawUI()
     local cControlBg = colors.gray 
 
     -- HEADER (Line 1)
-    term.setCursorPos(1, 1)
-    term.setBackgroundColor(cHead)
-    term.setTextColor(cHeadText)
-    term.clearLine()
-    term.write(" BACOFY PRO 2.0")
+    display.setCursorPos(1, 1)
+    display.setBackgroundColor(cHead)
+    display.setTextColor(cHeadText)
+    display.clearLine()
+    display.write(" BACOFY PRO 2.0")
     
     local timeStr = textutils.formatTime(os.time(), true)
-    term.setCursorPos(w - #timeStr, 1)
-    term.write(timeStr)
+    display.setCursorPos(w - #timeStr, 1)
+    display.write(timeStr)
     
     -- SUBHEADER / SEARCH (Line 2)
-    term.setCursorPos(1, 2)
-    term.setBackgroundColor(colors.black)
-    term.setTextColor(colors.white)
-    term.clearLine()
+    display.setCursorPos(1, 2)
+    display.setBackgroundColor(colors.black)
+    display.setTextColor(colors.white)
+    display.clearLine()
     
     if view == "MASTER" then
-        term.write(" Playlists")
-        term.setCursorPos(w - 7, 2)
-        term.setTextColor(colors.lightGray)
-        term.write("[R] REF") 
+        display.write(" Playlists")
+        display.setCursorPos(w - 7, 2)
+        display.setTextColor(colors.lightGray)
+        display.write("[R] REF") 
     elseif view == "PLAYLIST" then
-        term.write(" (<-) Search: ")
-        term.setTextColor(colors.white)
-        term.write(string.sub(searchQuery .. "_", 1, w - 15)) 
+        display.write(" (<-) Search: ")
+        display.setTextColor(colors.white)
+        display.write(string.sub(searchQuery .. "_", 1, w - 15)) 
     end
     
     -- LIST AREA (Line 3 to h-4)
@@ -111,9 +119,9 @@ local function drawUI()
     local maxDisplay = listEndY - listStartY + 1
     
     for y = listStartY, listEndY do
-        term.setCursorPos(1, y)
-        term.setBackgroundColor(cListBg) 
-        term.clearLine()
+        display.setCursorPos(1, y)
+        display.setBackgroundColor(cListBg) 
+        display.clearLine()
     end
     
     local listToDraw = (view == "MASTER") and playlists or filteredSongs
@@ -128,7 +136,7 @@ local function drawUI()
         local item = listToDraw[idx]
         
         if item then
-            term.setCursorPos(1, listStartY + i - 1)
+            display.setCursorPos(1, listStartY + i - 1)
             local isActive = false
             local displayText = ""
             
@@ -145,67 +153,64 @@ local function drawUI()
             end
             
             if isActive then
-                term.setBackgroundColor(cActiveItemBg)
-                term.setTextColor(cActiveItemText)
+                display.setBackgroundColor(cActiveItemBg)
+                display.setTextColor(cActiveItemText)
             else
-                term.setBackgroundColor(cItemBg) 
-                term.setTextColor(colors.white) 
+                display.setBackgroundColor(cItemBg) 
+                display.setTextColor(colors.white) 
             end
             
-            term.clearLine()
-            term.write(string.sub(displayText, 1, w))
+            display.clearLine()
+            display.write(string.sub(displayText, 1, w))
         end
     end
 
     -- CONTROLS AREA BACKGROUND
-    term.setBackgroundColor(cControlBg) 
-    term.setTextColor(colors.white)
+    display.setBackgroundColor(cControlBg) 
+    display.setTextColor(colors.white)
     
     local cButtonAccent = colors.red
 
-    -- PROGRESS BAR (Line h-3) - JETZT FAST VOLLE BREITE (w-2)
-    term.setCursorPos(1, h - 3)
-    term.clearLine()
-    local barW = w - 2 -- Fast volle Breite, 1 Block Rand links/rechts
+    -- PROGRESS BAR (Line h-3)
+    display.setCursorPos(1, h - 3)
+    display.clearLine()
+    local barW = w - 2 
     local barStartX = 2
     
-    term.setCursorPos(barStartX, h - 3)
+    display.setCursorPos(barStartX, h - 3)
     if totalBytes > 0 and (isPlaying or isPaused) then
         local progress = currentBytes / totalBytes
-        if progress > 1 then progress = 1 end
-        if progress < 0 then progress = 0 end
-        
         local filled = math.floor(progress * barW)
         local empty = barW - filled
         
-        term.setTextColor(colors.red)
-        term.write(string.rep("=", filled))
-        term.setTextColor(colors.black)
-        term.write(string.rep("-", empty))
+        display.setTextColor(colors.red)
+        display.write(string.rep("=", math.min(barW, filled)))
+        display.setTextColor(colors.black)
+        display.write(string.rep("-", math.max(0, empty)))
     else
-        term.setTextColor(colors.black)
-        term.write(string.rep("-", barW))
+        display.setTextColor(colors.black)
+        display.write(string.rep("-", barW))
     end
 
     -- MEDIA BUTTONS (Line h-2)
-    term.setCursorPos(1, h - 2)
-    term.clearLine()
+    display.setCursorPos(1, h - 2)
+    display.clearLine()
     local playIcon = (isPlaying and not isPaused) and "||" or "> "
-    term.setCursorPos(cx - 9, h - 2)
-    term.setTextColor(cButtonAccent)
-    term.write("<<")
-    term.setCursorPos(cx - 4, h - 2)
-    term.setTextColor(colors.white)
-    term.write(playIcon)
-    term.setCursorPos(cx + 3, h - 2)
-    term.setTextColor(cButtonAccent)
-    term.write("[]")
-    term.setCursorPos(cx + 10, h - 2)
-    term.write(">>")
+    display.setCursorPos(cx - 9, h - 2)
+    display.setTextColor(cButtonAccent)
+    display.write("<<")
+    display.setCursorPos(cx - 4, h - 2)
+    display.setTextColor(colors.white)
+    display.write(playIcon)
+    display.setCursorPos(cx + 3, h - 2)
+    display.setTextColor(cButtonAccent)
+    display.write("[]")
+    display.setCursorPos(cx + 10, h - 2)
+    display.write(">>")
     
     -- VOLUME CONTROLS (Line h-1)
-    term.setCursorPos(1, h - 1)
-    term.clearLine()
+    display.setCursorPos(1, h - 1)
+    display.clearLine()
     
     local volStr = tostring(math.floor(vol * 100))
     if #volStr == 1 then volStr = "0" .. volStr end
@@ -214,37 +219,37 @@ local function drawUI()
     local vText = "[-]    VOL: " .. volStr .. "    [+]"
     local vStartX = cx - math.floor(#vText / 2)
     
-    term.setCursorPos(vStartX, h - 1)
-    term.setTextColor(cButtonAccent)
-    term.write("[-]")
+    display.setCursorPos(vStartX, h - 1)
+    display.setTextColor(cButtonAccent)
+    display.write("[-]")
     
-    term.setCursorPos(vStartX + 7, h - 1)
-    term.setTextColor(colors.white)
-    term.write("VOL: ")
-    term.setBackgroundColor(colors.black)
-    term.setTextColor(colors.white)
-    term.write(volStr)
+    display.setCursorPos(vStartX + 7, h - 1)
+    display.setTextColor(colors.white)
+    display.write("VOL: ")
+    display.setBackgroundColor(colors.black)
+    display.setTextColor(colors.white)
+    display.write(volStr)
     
-    term.setBackgroundColor(cControlBg) 
-    term.setTextColor(cButtonAccent)
-    term.setCursorPos(vStartX + #vText - 3, h - 1)
-    term.write("[+]")
+    display.setBackgroundColor(cControlBg) 
+    display.setTextColor(cButtonAccent)
+    display.setCursorPos(vStartX + #vText - 3, h - 1)
+    display.write("[+]")
 
     -- STATUS FOOTER (Line h)
-    term.setCursorPos(1, h)
-    term.setBackgroundColor(cHead)
-    term.setTextColor(cHeadText)
-    term.clearLine()
+    display.setCursorPos(1, h)
+    display.setBackgroundColor(cHead)
+    display.setTextColor(cHeadText)
+    display.clearLine()
     
     if isPlaying then
         local currentName = (allSongs[currentIdx] and allSongs[currentIdx].name) or "Unknown"
         if isPaused then
-            term.write(" PAUSED:  " .. string.sub(currentName, 1, w - 11))
+            display.write(" PAUSED:  " .. string.sub(currentName, 1, w - 11))
         else
-            term.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
+            display.write(" PLAYING: " .. string.sub(currentName, 1, w - 11))
         end
     else
-        term.write(" STOPPED")
+        display.write(" STOPPED")
     end
 end
 
@@ -278,7 +283,6 @@ local function playSong(url)
         totalBytes = tonumber(respHeaders["Content-Length"]) or tonumber(respHeaders["content-length"]) or 0
     end
     
-    term.redirect(term.native()) 
     drawUI()
     
     local eof = false
@@ -364,6 +368,14 @@ parallel.waitForAny(
         while true do
             local event, p1, p2, p3 = os.pullEvent()
             
+            -- Check for monitor_touch or mouse_click
+            local x, y, side
+            if event == "mouse_click" and display == term then
+                x, y = p2, p3
+            elseif event == "monitor_touch" and display == monitor then
+                x, y = p2, p3
+            end
+
             if event == "mouse_scroll" then
                 scrollOffset = scrollOffset + p1
                 drawUI()
@@ -386,9 +398,7 @@ parallel.waitForAny(
                 end
                 drawUI()
                 
-            elseif event == "mouse_click" then
-                local x, y = p2, p3
-                
+            elseif x and y then
                 if y == 2 then
                     if view == "MASTER" and x > w - 8 then
                         playlists = getList(masterURL) 
