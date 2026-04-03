@@ -1,5 +1,5 @@
 -- ==========================================
--- PROGRAM: BACOFY PRO (Cyber-Red Edition)
+-- PROGRAM: BACOFY PRO 
 -- ULTIMATE FINAL VERSION: CENTERED PROGRESS
 -- ==========================================
 
